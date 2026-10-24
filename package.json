@@ -1,0 +1,17 @@
+{
+  "name": "already-filed",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "python3 -m http.server 8000",
+    "fetch": "node scripts/fetch.mjs",
+    "tune": "node scripts/tune.mjs",
+    "test": "node tests/unit.mjs && node tests/eval.mjs"
+  },
+  "devDependencies": {
+    "@huggingface/transformers": "4.3.1"
+  },
+  "license": "MIT",
+  "description": "Finds the open GitHub issues that were already filed, with EmbeddingGemma running in your browser"
+}

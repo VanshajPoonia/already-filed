@@ -1,0 +1,5 @@
+node_modules/
+tests/.cache/
+.DS_Store
+.vercel
+data/repos/*.json

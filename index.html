@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Already Filed</title>
+  <meta name="description" content="Finds the open GitHub issues that duplicate an earlier one, and the issue you are about to file twice. An open model reads every issue in your browser.">
+  <meta name="theme-color" content="#f4f1ea" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#121417" media="(prefers-color-scheme: dark)">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/styles.css">
+  <script type="module" src="src/app.js"></script>
+</head>
+<body>
+  <main>
+    <header>
+      <p class="kicker">Already Filed</p>
+      <h1>“Duplicate of #…”, without remembering <em>thousands</em> of issues.</h1>
+      <p class="lede">Point it at a GitHub repo. An open model running in this tab reads every open issue (and the ones closed this month) and lists the open ones that say the same thing as an earlier one, with the comment ready to paste. Maintainers close duplicates in a click; reporters check before they file.</p>
+      <p class="promise"><span aria-hidden="true">🦥</span> No server, no sign-up, no API key. GitHub sends the issues to your browser; the model never leaves it.</p>
+    </header>
+
+    <section class="card input" aria-label="Repository">
+      <div class="samples">
+        <span class="small">Try one:</span>
+        <button class="chip" data-repo="ollama/ollama" data-snapshot>ollama/ollama <span class="small">(instant snapshot)</span></button>
+        <button class="chip" data-repo="zed-industries/zed">zed-industries/zed</button>
+        <button class="chip" data-repo="neovim/neovim">neovim/neovim</button>
+      </div>
+      <label class="repo"><span class="small">Repository</span>
+        <input id="repo" autocomplete="off" spellcheck="false" placeholder="owner/name" value="ollama/ollama"></label>
+      <details class="token">
+        <summary class="small">Hit GitHub's hourly limit? Add a token</summary>
+        <p class="small">Without one, GitHub allows 60 requests an hour from your network: a repo with 2,500 open issues uses about 30. A <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">fine-grained token</a> with no permissions at all (public repos only) is enough. It stays in this tab and goes only to api.github.com.</p>
+        <input id="token" type="password" autocomplete="off" placeholder="github_pat_…">
+      </details>
+      <div class="go">
+        <button id="go" class="primary">Find the duplicates</button>
+        <p id="status" class="status small" aria-live="polite"></p>
+      </div>
+      <progress id="bar" max="1" value="0" hidden></progress>
+      <p class="small">The reader is <strong>EmbeddingGemma</strong>, Google's open-weight embedding model. The first run downloads it, <span id="size">197 MB</span>, once.</p>
+    </section>
+
+    <section id="results" hidden aria-live="polite">
+      <div class="card">
+        <p class="kicker">Open issues that were probably filed before</p>
+        <h2><span id="likely-count">0</span> of <span id="open-count">0</span> open issues</h2>
+        <p class="small">Each one next to the earlier issues it most resembles, closest first. It suggests; you decide. Tested on two big repos it was never tuned on: the issue maintainers chose was among its top three for 65% of zed's duplicates and 58% of neovim's, and most of its other confident suggestions turned out to be duplicates nobody had linked.</p>
+        <ol id="likely" class="pairs"></ol>
+        <details id="maybe-wrap" class="maybe-wrap">
+          <summary><span id="maybe-count">0</span> more that might be (less sure)</summary>
+          <ol id="maybe" class="pairs"></ol>
+        </details>
+      </div>
+
+      <div class="card">
+        <p class="kicker">About to file an issue?</p>
+        <h2>Check <span id="draft-repo"></span> first</h2>
+        <textarea id="draft" spellcheck="true" placeholder="Title on the first line&#10;&#10;Then what happened, any error message, versions…"></textarea>
+        <div class="go"><button id="check" class="secondary">Has this been filed?</button></div>
+        <div id="draft-out" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <footer>
+      <p>Tested on 3 real repos against every duplicate their maintainers marked: see <a href="https://github.com/VanshajPoonia/already-filed#how-well-it-works">how well it works</a>. Model: <a href="https://huggingface.co/google/embeddinggemma-300m">EmbeddingGemma</a>, under the <a href="https://ai.google.dev/gemma/terms">Gemma Terms of Use</a>. <a href="https://github.com/VanshajPoonia/already-filed">Source</a>, MIT.</p>
+    </footer>
+  </main>
+</body>
+</html>

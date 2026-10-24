@@ -1,0 +1,10 @@
+{
+  "name": "Already Filed",
+  "short_name": "Already Filed",
+  "description": "Finds the GitHub issues that were already filed, with an open model in your browser.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f4f1ea",
+  "theme_color": "#1b1e22",
+  "icons": [{ "src": "assets/icon.svg", "sizes": "any", "type": "image/svg+xml" }]
+}
