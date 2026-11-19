@@ -1,6 +1,6 @@
 {
-  "name": "Already Filed",
-  "short_name": "Already Filed",
+  "name": "IssueTwin: Duplicate GitHub Issue Finder",
+  "short_name": "IssueTwin",
   "description": "Finds the GitHub issues that were already filed, with an open model in your browser.",
   "start_url": "./",
   "display": "standalone",

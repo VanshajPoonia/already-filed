@@ -1,4 +1,6 @@
-# Already Filed 🦥
+# IssueTwin 🦥
+
+**Duplicate GitHub Issue Finder.** Formerly called Already Filed.
 
 Finds the open GitHub issues that say the same thing as an earlier one, so maintainers can type “Duplicate of #…” without remembering thousands of issues. And lets a reporter check before filing.
 
@@ -6,7 +8,7 @@ Point it at a repo. **EmbeddingGemma**, Google's open-weight embedding model, re
 
 **Live:** https://vanshajpoonia.github.io/already-filed/
 
-<img src="docs/results.png" alt="Already Filed on a snapshot of ollama/ollama: open issues next to the earlier issues they resemble, with a button to copy Duplicate of" width="640">
+<img src="docs/results.png" alt="IssueTwin on a snapshot of ollama/ollama: open issues next to the earlier issues they resemble, with a button to copy Duplicate of" width="640">
 
 ## Why
 
@@ -14,7 +16,7 @@ Big repos get the same bug reported again and again. In zed-industries/zed, main
 
 ## How it works
 
-<img src="docs/how-it-works.png" alt="How Already Filed works: GitHub API, then in the tab: clean, EmbeddingGemma, score, you decide" width="720">
+<img src="docs/how-it-works.png" alt="How IssueTwin works: GitHub API, then in the tab: clean, EmbeddingGemma, score, you decide" width="720">
 
 - **What gets searched.** On the tuning repo, 91% of the issues maintainers pointed to were still open when the duplicate was filed, and another 7% had been closed in the 30 days before. So each issue is compared with exactly that: issues open at the time, or closed in the last 30 days. It is also all the app needs to fetch.
 - **Cleaning** (`src/text.js`). Issue templates make unrelated issues look alike (every ollama issue starts with “What is the issue?”, “OS”, “GPU”, “Ollama version”). Rather than hard-coding any repo's template, a line counts as template text when it appears in more than 2% of the repo's issues. Links, images and all but the first 4 lines of each log are dropped too: the first lines of a log are where the error is.
