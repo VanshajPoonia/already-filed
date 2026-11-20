@@ -1,5 +1,6 @@
 // Fast checks of everything that is not the model: cleaning issue text, finding a repo's
-// template, keyword search, ranking, and how the test questions are built.
+// template, keyword search, ranking, how the test questions are built, and which issues a PR
+// says it fixes.
 import assert from 'node:assert/strict';
 import { issueText, templateLines } from '../src/text.js';
 import { BM25, tokens } from '../src/bm25.js';
@@ -7,6 +8,7 @@ import { Matcher, candidates } from '../src/match.js';
 import { parseRepo } from '../src/github.js';
 import { groups, questions } from '../scripts/data.mjs';
 import { score, rankOfRight } from '../scripts/measure.mjs';
+import { linkedIssues, dupLinks, sameIssue, prText, prTemplate, isBot } from '../src/prs.js';
 
 let passed = 0;
 const t = (name, fn) => { fn(); passed++; };
@@ -98,6 +100,34 @@ t('repo names in every form people paste', () => {
   assert.equal(parseRepo('https://github.com/zed-industries/zed/issues'), 'zed-industries/zed');
   assert.equal(parseRepo(' neovim/neovim.git '), 'neovim/neovim');
   assert.equal(parseRepo('just-a-word'), null);
+});
+
+t('PR links: closing keywords, same repo only, not inside comments', () => {
+  const body = 'This PR fixes #23995\n<!-- fixes #1 -->\nCloses meshery/meshery#12, resolves https://github.com/meshery/meshery/issues/99\nfixes other/repo#5. Fixed: #7. Related to #8';
+  assert.deepEqual(linkedIssues(body, 'meshery/meshery'), [7, 12, 99, 23995]);
+  assert.deepEqual(linkedIssues('', 'a/b'), []);
+});
+
+t('said duplicates: only lines that say duplicate or superseded, never quotes', () => {
+  const text = '> duplicate of #1\nI guess this is a duplicate of #20541\nLooks good, see #6\nSuperseded by https://github.com/meshery/meshery/pull/22715';
+  assert.deepEqual(dupLinks(text, 21605, 'meshery/meshery'), [20541, 22715]);
+  assert.deepEqual(dupLinks('duplicate of #5', 5, 'a/b'), []);
+});
+
+t('bots are left out', () => {
+  assert.ok(isBot({ login: 'dependabot[bot]', type: 'Bot' }));
+  assert.ok(isBot({ login: 'renovate-bot' }));
+  assert.ok(!isBot({ login: 'octocat', type: 'User' }));
+});
+
+t('same issue: later open PRs, against open or merged earlier ones', () => {
+  const prs = [{ n: 1, state: 'merged', closes: [9] }, { n: 2, state: 'closed', closes: [9] }, { n: 3, state: 'open', closes: [9, 10] }, { n: 4, state: 'open', closes: [10] }, { n: 5, state: 'open', closes: [] }];
+  assert.deepEqual(sameIssue(prs), [{ pr: 4, issue: 10, by: [3] }, { pr: 3, issue: 9, by: [1] }]);
+});
+
+t('PR text: template and issue references taken out', () => {
+  const prs = Array.from({ length: 30 }, (_, i) => ({ title: `Fix ${i}`, body: `**Notes for Reviewers**\nThis PR fixes #${100 + i}\nchange ${i} see #4 and https://github.com/a/b/pull/3` }));
+  assert.equal(prText(prs[3], prTemplate(prs)), 'Fix 3\nchange 3 see and');
 });
 
 console.log(`${passed}/${passed} unit checks pass`);
