@@ -319,7 +319,7 @@ $('#close').addEventListener('click', async () => {
   const reqs = closeRequests(repo, boxes.map((c) => ({ issue: issues[+c.dataset.close], original: issues[+c.dataset.original] })));
   const out = $('#sweep-out');
   if ($('#dry').checked) {
-    out.innerHTML = `<p class="small">Dry run. Nothing was sent. These ${reqs.length} requests would go to api.github.com, one at a time, using GitHub's own close-as-duplicate:</p><pre class="requests">${esc(reqs.map(requestText).join('\n\n'))}</pre>`;
+    out.innerHTML = `<p class="small">Dry run. Nothing was sent. ${reqs.length === 1 ? 'This request would' : `These ${reqs.length} requests would`} go to api.github.com, one at a time, using GitHub's own close-as-duplicate:</p><pre class="requests">${esc(reqs.map(requestText).join('\n\n'))}</pre>`;
     return;
   }
   const token = $('#write-token').value.trim();
