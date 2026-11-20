@@ -16,9 +16,19 @@ export function loadRepo(repo) {
   return issues;
 }
 
+/** The frozen pull requests in data/prs (scripts/fetch-prs.mjs). */
+export function loadPrs(repo) {
+  const file = new URL(`../data/prs/${repo.replace('/', '__')}.json.gz`, import.meta.url);
+  const { prs, fetched, since } = JSON.parse(gunzipSync(readFileSync(file)));
+  prs.sort((a, b) => a.n - b.n);
+  Object.assign(prs, { fetched, since });
+  return prs;
+}
+
 /**
  * Groups issues that maintainers linked as duplicates (A dup of B, C dup of B: one group).
- * Returns, for each issue, its group id, or -1 if it was never linked.
+ * `dupOf` is one number, or a list for PRs. Returns, for each issue, its group id, or -1 if it
+ * was never linked.
  */
 export function groups(issues) {
   const at = new Map(issues.map((x, i) => [x.n, i]));
@@ -26,10 +36,12 @@ export function groups(issues) {
   const find = (i) => (parent[i] === i ? i : (parent[i] = find(parent[i])));
   const linked = new Set();
   for (const [i, x] of issues.entries()) {
-    if (!x.dupOf || !at.has(x.dupOf)) continue;
-    const j = at.get(x.dupOf);
-    parent[find(i)] = find(j);
-    linked.add(i); linked.add(j);
+    for (const d of [x.dupOf ?? []].flat()) {
+      if (!at.has(d)) continue;
+      const j = at.get(d);
+      parent[find(i)] = find(j);
+      linked.add(i); linked.add(j);
+    }
   }
   return issues.map((_, i) => (linked.has(i) ? find(i) : -1));
 }

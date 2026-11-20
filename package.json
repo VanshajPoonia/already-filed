@@ -6,6 +6,7 @@
   "scripts": {
     "start": "python3 -m http.server 8000",
     "fetch": "node scripts/fetch.mjs",
+    "fetch:prs": "node scripts/fetch-prs.mjs",
     "tune": "node scripts/tune.mjs",
     "test": "node tests/unit.mjs && node tests/eval.mjs"
   },
