@@ -2,11 +2,12 @@
 // template, keyword search, ranking, how the test questions are built, PR links, the backlog
 // sweep's requests and the Action's comment.
 import assert from 'node:assert/strict';
+import { rmSync } from 'node:fs';
 import { issueText, templateLines } from '../src/text.js';
 import { BM25, tokens } from '../src/bm25.js';
 import { Matcher, candidates } from '../src/match.js';
 import { parseRepo } from '../src/github.js';
-import { groups, questions } from '../scripts/data.mjs';
+import { groups, questions, embedCached } from '../scripts/data.mjs';
 import { score, rankOfRight } from '../scripts/measure.mjs';
 import { linkedIssues, dupLinks, sameIssue, prText, prTemplate, isBot } from '../src/prs.js';
 import { clusters, closeRequests, send } from '../src/sweep.js';
@@ -188,6 +189,18 @@ t('Action: one quiet comment, or none', () => {
   assert.ok(c.includes('#4 was already fixed in PR #6, which is merged.'));
   assert.ok(c.includes('- #8 Fix login (open PR)'));
   assert.ok(!/close[sd]? #|fix(es)? #/i.test(c)); // never a keyword that would make GitHub link or close anything
+});
+
+t('embedding progress survives a killed run', async () => {
+  const fake = async (texts) => texts.map((x) => Float32Array.from([x.length, 1]));
+  const list = Array.from({ length: 2500 }, (_, i) => 'x'.repeat((i % 7) + 1));
+  let calls = 0;
+  await assert.rejects(embedCached('_unit-resume', list, async (x) => { if (++calls === 2) throw new Error('killed'); return fake(x); }, 2));
+  let embedded = 0;
+  const v = await embedCached('_unit-resume', list, async (x) => { embedded += x.length; return fake(x); }, 2);
+  assert.equal(embedded, 1500); // the first 1,000 were saved before the kill
+  assert.ok(v.every((x, i) => x[0] === list[i].length));
+  rmSync(new URL('./.cache/_unit-resume.bin', import.meta.url));
 });
 
 await Promise.all(pending);

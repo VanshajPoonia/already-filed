@@ -37,11 +37,13 @@ const BATCH = 16;
  * @param {'gemma'|'bge'} key
  * @returns {Promise<(texts: string[], onBatch?: (done:number)=>void) => Promise<Float32Array[]>>}
  */
-export async function embedder(tf, key, { device, file, prefix, maxTokens = MAX_TOKENS, progress_callback } = {}) {
+export async function embedder(tf, key, { device, file, prefix, maxTokens = MAX_TOKENS, threads, progress_callback } = {}) {
   const m = MODELS[key];
   const model_file_name = file ?? (device === 'wasm' ? m.wasmFile : undefined);
   const tokenizer = await tf.AutoTokenizer.from_pretrained(m.id, { progress_callback });
-  const model = await tf.AutoModel.from_pretrained(m.id, { dtype: m.dtype, model_file_name, device, progress_callback });
+  // `threads` caps ONNX Runtime's CPU threads in Node, for shared machines.
+  const session_options = threads ? { intraOpNumThreads: threads } : undefined;
+  const model = await tf.AutoModel.from_pretrained(m.id, { dtype: m.dtype, model_file_name, device, session_options, progress_callback });
   const pre = prefix ?? m.prefix;
 
   return async (texts, onBatch) => {

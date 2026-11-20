@@ -1,6 +1,7 @@
 // The frozen issue snapshots in data/repos, the duplicate links in them, and an embedding
 // cache so the slow part of the tests runs once.
-import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, appendFileSync, existsSync, mkdirSync, renameSync, rmSync, truncateSync } from 'node:fs';
+import { createHash } from 'node:crypto';
 import { gunzipSync } from 'node:zlib';
 import { issueText, templateLines } from '../src/text.js';
 
@@ -73,20 +74,44 @@ export function texts(issues, mode = 'clean') {
   return issues.map((x) => issueText(x, template));
 }
 
-/** Embeds texts once and keeps the vectors in tests/.cache, keyed by repo and variant. */
+const CHUNK = 1000;
+
+/**
+ * Embeds texts once and keeps the vectors in tests/.cache, keyed by repo and variant. Progress
+ * is saved every CHUNK texts, so a run that gets killed picks up where it stopped.
+ */
 export async function embedCached(name, list, embed, dims) {
   mkdirSync(CACHE, { recursive: true });
   const bin = new URL(`${name}.bin`, CACHE);
-  if (existsSync(bin)) {
+  const read = () => {
     const buf = readFileSync(bin);
     const all = new Float32Array(buf.buffer, buf.byteOffset, buf.byteLength / 4);
-    if (all.length === list.length * dims) return Array.from(list, (_, i) => all.subarray(i * dims, (i + 1) * dims));
+    return all.length === list.length * dims ? Array.from(list, (_, i) => all.subarray(i * dims, (i + 1) * dims)) : null;
+  };
+  if (existsSync(bin)) {
+    const vecs = read();
+    if (vecs) return vecs;
+  }
+  const part = new URL(`${name}.part.bin`, CACHE);
+  const meta = new URL(`${name}.part.json`, CACHE);
+  const key = createHash('sha1').update(list.join('\0')).digest('hex');
+  let done = 0;
+  if (existsSync(part) && existsSync(meta) && JSON.parse(readFileSync(meta, 'utf8')).key === key) {
+    done = Math.floor(readFileSync(part).byteLength / 4 / dims);
+    truncateSync(part, done * dims * 4); // drop a half-written chunk
+  } else {
+    writeFileSync(part, Buffer.alloc(0));
+    writeFileSync(meta, JSON.stringify({ key }));
   }
   const t = Date.now();
-  const vecs = await embed(list, (n) => process.stdout.write(`\r  embedding ${name}: ${n}/${list.length}`));
-  process.stdout.write(`\r  embedded ${name}: ${list.length} issues in ${((Date.now() - t) / 60000).toFixed(1)} min\n`);
-  const all = new Float32Array(list.length * dims);
-  vecs.forEach((v, i) => all.set(v, i * dims));
-  writeFileSync(bin, Buffer.from(all.buffer));
-  return vecs;
+  for (let i = done; i < list.length; i += CHUNK) {
+    const vecs = await embed(list.slice(i, i + CHUNK), (n) => process.stdout.write(`\r  embedding ${name}: ${i + n}/${list.length}`));
+    const buf = new Float32Array(vecs.length * dims);
+    vecs.forEach((v, k) => buf.set(v, k * dims));
+    appendFileSync(part, Buffer.from(buf.buffer));
+  }
+  process.stdout.write(`\r  embedded ${name}: ${list.length - done} texts in ${((Date.now() - t) / 60000).toFixed(1)} min\n`);
+  renameSync(part, bin);
+  rmSync(meta);
+  return read();
 }
