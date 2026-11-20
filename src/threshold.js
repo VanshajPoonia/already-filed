@@ -4,6 +4,7 @@
 //   MAYBE: 20% of them would
 export const LIKELY = 0.907;
 export const MAYBE = 0.841;
-// Pull requests start on the same lines, until tests/pr-eval.mjs measures their own.
-export const PR_LIKELY = LIKELY;
-export const PR_MAYBE = MAYBE;
+// Pull requests, chosen the same way by tests/pr-eval.mjs on the first half of meshery/meshery's
+// PRs since 2025. PRs from one repo share far more words than issues do, so the lines sit higher.
+export const PR_LIKELY = 1.069;
+export const PR_MAYBE = 0.889;

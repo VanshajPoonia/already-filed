@@ -8,7 +8,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import * as tf from '@huggingface/transformers';
 import { embedder } from '../src/embed.js';
-import { LIKELY, PR_LIKELY } from '../src/threshold.js';
+import { LIKELY, PR_LIKELY, PR_MAYBE } from '../src/threshold.js';
 import { check, MARKER, CLEARED } from '../action/check.mjs';
 import { vectorCache } from '../action/vectors.mjs';
 
@@ -126,9 +126,11 @@ await t('a PR for an issue another PR already fixes says which PR, even when tha
   assert.ok(!r.matches.some((m) => m.n === 23384)); // said once, not twice
 });
 
-await t('a PR that repeats an earlier one with no linked issue is caught by its text', async () => {
-  fakeGitHub(MESHERY, { pulls });
-  const r = await run({ repo: MESHERY, event: repeatEvent });
+await t('a PR that repeats an earlier one with no linked issue: quiet at the default line, caught by its text at the looser one', async () => {
+  const gh = fakeGitHub(MESHERY, { pulls });
+  assert.equal((await run({ repo: MESHERY, event: repeatEvent })).action, 'none');
+  assert.deepEqual(gh.writes, []);
+  const r = await run({ repo: MESHERY, event: repeatEvent, prThreshold: PR_MAYBE });
   assert.deepEqual(r.fixes, []);
   assert.equal(r.matches[0]?.n, 20910);
 });

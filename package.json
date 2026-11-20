@@ -8,7 +8,7 @@
     "fetch": "node scripts/fetch.mjs",
     "fetch:prs": "node scripts/fetch-prs.mjs",
     "tune": "node scripts/tune.mjs",
-    "test": "node tests/unit.mjs && node tests/action.mjs && node tests/eval.mjs"
+    "test": "node tests/unit.mjs && node tests/action.mjs && node tests/eval.mjs && node tests/pr-eval.mjs"
   },
   "devDependencies": {
     "@huggingface/transformers": "4.3.1"
