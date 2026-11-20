@@ -4,6 +4,7 @@
 //
 //   npm test                 zed-industries/zed and neovim/neovim (the test repos)
 //   REPOS=ollama/ollama npm test   the tuning repo, for comparison
+//   THREADS=4 npm test             caps the CPU threads the first, slow run uses
 //
 // Each new issue is compared with the issues that were open when it was filed, or closed in
 // the 30 days before. Four ways of ranking them, all scored the same way:
@@ -20,7 +21,7 @@ import { LIKELY, MAYBE } from '../src/threshold.js';
 
 const REPOS = (process.env.REPOS || 'zed-industries/zed,neovim/neovim').split(',');
 const embedders = {};
-const getEmbed = async (key) => (embedders[key] ??= await embedder(tf, key));
+const getEmbed = async (key) => (embedders[key] ??= await embedder(tf, key, { threads: Number(process.env.THREADS) || undefined }));
 const fails = [];
 
 for (const repo of REPOS) {
