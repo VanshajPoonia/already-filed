@@ -108,6 +108,30 @@
       </div>
     </section>
 
+    <section class="card bench" id="benchmark" aria-labelledby="bench-title">
+      <p class="kicker">Benchmark</p>
+      <h2 id="bench-title">How often the right one is in the top three</h2>
+      <p class="small">Every issue of two big repos, replayed in the order they were filed. For each one a maintainer later marked as a duplicate, is the issue it duplicates among the first three suggestions? The ranking was not tuned on these repos.</p>
+      <div class="table"><table>
+        <thead><tr><th scope="col">Issues</th><th scope="col">Duplicates</th><th scope="col">Keyword search</th><th scope="col">IssueTwin</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">zed-industries/zed</th><td>1,653</td><td>38%</td><td><strong>65%</strong></td></tr>
+          <tr><th scope="row">neovim/neovim</th><td>379</td><td>39%</td><td><strong>58%</strong></td></tr>
+        </tbody>
+      </table></div>
+      <h3>Pull requests</h3>
+      <p class="small">meshery/meshery's PRs since 2025, replayed the same way, with every “fixes #N” taken out so only the text counts.</p>
+      <div class="table"><table>
+        <thead><tr><th scope="col">meshery/meshery PRs</th><th scope="col">PRs</th><th scope="col">Keyword search</th><th scope="col">IssueTwin</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Called a duplicate</th><td>83</td><td>80%</td><td><strong>84%</strong></td></tr>
+          <tr><th scope="row">Fix an issue an earlier PR fixes</th><td>392</td><td>86%</td><td><strong>90%</strong></td></tr>
+        </tbody>
+      </table></div>
+      <p class="small">On PRs the model is only a little ahead of keywords: 84% against 80% is 3 PRs out of 83. The “fixes #N” links do most of the work. They find every PR in the second row by themselves, and 47% of the first.</p>
+      <p class="small">Keyword search is BM25, roughly what GitHub's search box does. The duplicates are the ones maintainers marked: “Duplicate of #…”, GitHub's close-as-duplicate, or for PRs a comment that says duplicate or superseded. To rerun it: <code>npm install</code>, then <code>npm test</code>. <a href="https://github.com/VanshajPoonia/already-filed#how-well-it-works">Full tables and method</a>.</p>
+    </section>
+
     <footer>
       <p>Tested on 3 real repos against every duplicate their maintainers marked: see <a href="https://github.com/VanshajPoonia/already-filed#how-well-it-works">how well it works</a>. Model: <a href="https://huggingface.co/google/embeddinggemma-300m">EmbeddingGemma</a>, under the <a href="https://ai.google.dev/gemma/terms">Gemma Terms of Use</a>. <a href="https://github.com/VanshajPoonia/already-filed">Source</a>, MIT.</p>
     </footer>

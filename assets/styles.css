@@ -119,5 +119,14 @@ progress { width: 100%; height: 6px; margin-top: 12px; accent-color: var(--accen
 .sent { margin: 10px 0 0; padding-left: 20px; }
 .sent .failed { color: var(--maybe); }
 
+.bench .table { overflow-x: auto; margin-top: 12px; }
+.bench table { width: 100%; border-collapse: collapse; font-size: 14.5px; }
+.bench th, .bench td { padding: 8px 10px; border-bottom: 1px solid var(--line); text-align: right; }
+.bench th:first-child { text-align: left; font-weight: 500; font-size: 13.5px; }
+.bench thead th { font-size: 12.5px; color: var(--muted); font-weight: 600; }
+.bench td strong { color: var(--likely); }
+.bench h3 { margin: 20px 0 0; font: 600 18px/1.25 var(--serif); }
+code { font: 13px var(--mono); background: var(--paper); padding: 1px 5px; border-radius: 5px; }
+
 footer { margin-top: 36px; color: var(--muted); font-size: 13.5px; }
 @media (max-width: 480px) { h1 { font-size: 27px; } .matches li { flex-direction: row; } }
