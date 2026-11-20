@@ -19,12 +19,15 @@ const number = (s, fallback) => {
 const cacheDir = env.ISSUETWIN_CACHE || join(env.HOME || '.', '.cache', 'issuetwin');
 tf.env.cacheDir = join(cacheDir, 'models');
 
+const event = JSON.parse(readFileSync(env.GITHUB_EVENT_PATH, 'utf8'));
+// Issues and PRs keep separate files, so a run of one never drops the other's vectors.
+const file = `${(env.GITHUB_REPOSITORY || 'repo').replace('/', '__')}-${event.pull_request ? 'prs' : 'issues'}`;
 const raw = await embedder(tf, 'gemma');
-const cache = vectorCache(raw, join(cacheDir, 'vectors', (env.GITHUB_REPOSITORY || 'repo').replace('/', '__')), `${MODELS.gemma.id}:${MODELS.gemma.dtype}:${MODELS.gemma.prefix}`);
+const cache = vectorCache(raw, join(cacheDir, 'vectors', file), `${MODELS.gemma.id}:${MODELS.gemma.dtype}:${MODELS.gemma.prefix}`);
 
 const result = await check({
   repo: env.GITHUB_REPOSITORY,
-  event: JSON.parse(readFileSync(env.GITHUB_EVENT_PATH, 'utf8')),
+  event,
   token: env.ISSUETWIN_TOKEN,
   embed: cache.embed,
   threshold: number(env.ISSUETWIN_THRESHOLD, LIKELY),
