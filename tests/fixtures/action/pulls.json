@@ -1,0 +1,335 @@
+[
+ {
+  "number": 19029,
+  "title": "add newcomers meeting attendance",
+  "body": "**[Signed commits](https://github.com/meshery/meshery/blob/master/CONTRIBUTING.md#signing-off-on-commits-developer-certificate-of-origin)**\r\n- [x] Yes, I signed my commits.\r\n\r\n<!--\r\nThank you for contributing to Meshery! \r\n\r\nContributing Conventions:\r\n\r\n1. Include descriptive PR titles with [<component-name>] prepended.\r\n2. Build and test your changes before submitting a PR. \r\n3. Sign your commits.\r\n4. Include before and after screenshots/terminal output.\r\n\r\nBy following the community's contribution conventions upfront, the review process will \r\nbe accelerated and your PR merged more quickly.\r\n-->\r\n",
+  "state": "open",
+  "draft": false,
+  "created_at": "2026-05-01T13:20:40Z",
+  "closed_at": null,
+  "merged_at": null,
+  "updated_at": "2026-05-01T13:20:40Z",
+  "user": {
+   "login": "user72",
+   "type": "User"
+  }
+ },
+ {
+  "number": 19063,
+  "title": "Revert \"Replace Dart Sass installation method with npm\"",
+  "body": "Reverts meshery/meshery#19060",
+  "state": "open",
+  "draft": false,
+  "created_at": "2026-05-02T13:47:41Z",
+  "closed_at": null,
+  "merged_at": null,
+  "updated_at": "2026-05-02T13:47:41Z",
+  "user": {
+   "login": "user17",
+   "type": "User"
+  }
+ },
+ {
+  "number": 19083,
+  "title": "Chore: Upgrade to Node 22 and React 19",
+  "body": "",
+  "state": "open",
+  "draft": false,
+  "created_at": "2026-05-04T03:15:09Z",
+  "closed_at": null,
+  "merged_at": null,
+  "updated_at": "2026-05-04T03:15:09Z",
+  "user": {
+   "login": "user37",
+   "type": "User"
+  }
+ },
+ {
+  "number": 19144,
+  "title": "[UI] Fix share button alignment in Comparison Modal",
+  "body": "**Notes for Reviewers**\r\n\r\n- This PR fixes #15173\r\n- **Key Changes:**\r\n    - Refactored `MesheryChart.tsx` to render share icons inline with metadata headers using a flexible layout.\r\n    - Added support for multiple metadata blocks in Comparison mode (one block per result).\r\n    - Resolved a runtime crash that occurred when clicking the Share button in comparison mode.\r\n    - Moved chart generation to `useEffect` to prevent unnecessary re-renders (addressing previous maintainer feedback).\r\n    - Fixed several pre-existing TypeScript and CSS errors (invalid `flexWrap` value, missing null guards for refs, and deprecated `react-share` props).\r\n\r\n**[Signed commits](https://github.com/meshery/meshery/blob/master/CONTRIBUTING.md#signing-off-on-commits-developer-certificate-of-origin)**\r\n- [x] Yes, I signed my commits.\r\n",
+  "state": "open",
+  "draft": false,
+  "created_at": "2026-05-06T21:21:59Z",
+  "closed_at": null,
+  "merged_at": null,
+  "updated_at": "2026-05-06T21:21:59Z",
+  "user": {
+   "login": "user9",
+   "type": "User"
+  }
+ },
+ {
+  "number": 19191,
+  "title": "chore(ui): bump @sistent/sistent to v0.21.9",
+  "body": "Superseded by #18991, which already exists on the `bump-sistent-bot` branch. The integration changes (provider-ui bump, sistent icon adoption in `UrlStepper` / `ConnectionChip`, file-widget fix on the Model import form) have been pushed onto that PR's branch.",
+  "state": "open",
+  "draft": false,
+  "created_at": "2026-05-08T19:36:33Z",
+  "closed_at": null,
+  "merged_at": null,
+  "updated_at": "2026-05-08T19:36:33Z",
+  "user": {
+   "login": "user56",
+   "type": "User"
+  }
+ },
+ {
+  "number": 19222,
+  "title": "[Server] Propagate adapter status errors",
+  "body": "- Fix changeAdapterStatus to return deploy/undeploy errors to the GraphQL client instead of always returning StatusProcessing. \r\n\r\n- Replace Log.Debug(fmt.Printf(...)) with Log.Debugf(...) to avoid stdout leakage and ensure the logger receives the formatted message.\r\n\r\n- Behavior now matches error propagation used in other resolver files (addons/control-plane/data-plane).\r\n\r\n",
+  "state": "open",
+  "draft": false,
+  "created_at": "2026-05-11T03:43:43Z",
+  "closed_at": null,
+  "merged_at": null,
+  "updated_at": "2026-05-11T03:43:43Z",
+  "user": {
+   "login": "user87",
+   "type": "User"
+  }
+ },
+ {
+  "number": 19450,
+  "title": "fix:[docs] Update sidebar theme styles",
+  "body": "**Notes for Reviewers**\r\n\r\n- This PR fixes #18247 \r\nThe readability issue in the docs sidebar in light theme where white text on a light grey background made navigation hard to read.\r\n\r\n### Screenshots:\r\nBefore:\r\n<img width=\"500\" height=\"600\" alt=\"image\" src=\"https://github.com/user-attachments/assets/4d097db5-9883-433c-8479-1080adf02194\" />\r\n\r\n\r\nAfter:\r\n\r\n<img width=\"500\" height=\"600\" alt=\"image\" src=\"https://github.com/user-attachments/assets/d3e3168c-d505-437c-90c1-7a4b5fb25684\" />\r\n\r\n\r\n**[Signed commits](https://github.com/meshery/meshery/blob/master/CONTRIBUTING.md#signing-off-on-commits-developer-certificate-of-origin)**\r\n- [ ] Yes, I signed my commits.\r\n",
+  "state": "open",
+  "draft": false,
+  "created_at": "2026-05-15T18:59:46Z",
+  "closed_at": null,
+  "merged_at": null,
+  "updated_at": "2026-05-15T18:59:46Z",
+  "user": {
+   "login": "user48",
+   "type": "User"
+  }
+ },
+ {
+  "number": 19576,
+  "title": "[Docs] Incomplete migration to npm-managed Hugo in docs/Makefile ",
+  "body": "**Notes for Reviewers**\r\n\r\nThis PR completes the migration to the npm-managed Hugo binary started in PR #19558. \r\n\r\nThe `site:` target was updated to use `npx hugo` in #19558, but the `build:` and `clean:` targets still invoked a bare `hugo` command. This caused a `command not found` error for contributors who rely on `npm install` (as recommended in the setup instructions) and do not have Hugo installed globally. \r\n\r\nThis PR replaces the remaining bare `hugo` calls with `npx hugo` so that the `hugo-extended` binary from `node_modules` is always used, ensuring version consistency with `docs/package.json`.\r\n\r\n*Note: Docker targets (`docker-build`, `docker-build-upstream`, etc.) are intentionally left unchanged. The `docs/Dockerfile` installs Hugo globally inside the container (`/usr/local/bin/hugo`), so bare `hugo` is correct in that context.*\r\n\r\n- This PR fixes #19575\r\n\r\n**[Signed commits](https://github.com/meshery/meshery/blob/master/CONTRIBUTING.md#signing-off-on-commits-developer-certificate-of-origin)**\r\n- [x] Yes, I signed my commits.\r\n",
+  "state": "open",
+  "draft": false,
+  "created_at": "2026-05-21T04:29:53Z",
+  "closed_at": null,
+  "merged_at": null,
+  "updated_at": "2026-05-21T04:29:53Z",
+  "user": {
+   "login": "user85",
+   "type": "User"
+  }
+ },
+ {
+  "number": 19722,
+  "title": "Fix: Registry page",
+  "body": "**Notes for Reviewers**\r\n\r\n- This PR fixes #19648\r\n\r\n<img width=\"1854\" height=\"1005\" alt=\"image\" src=\"https://github.com/user-attachments/assets/053e0b94-f183-4cb8-ac76-82db2a80129c\" />\r\n\r\n\r\n**[Signed commits](https://github.com/meshery/meshery/blob/master/CONTRIBUTING.md#signing-off-on-commits-developer-certificate-of-origin)**\r\n- [x] Yes, I signed my commits.\r\n\r\n<!--\r\nThank you for contributing to Meshery! \r\n\r\nContributing Conventions:\r\n\r\n1. Include descriptive PR titles with [<component-name>] prepended.\r\n2. Build and test your changes before submitting a PR. \r\n3. Sign your commits.\r\n4. Include before and after screenshots/terminal output.\r\n\r\nBy following the community's contribution conventions upfront, the review process will \r\nbe accelerated and your PR merged more quickly.\r\n-->\r\n",
+  "state": "open",
+  "draft": false,
+  "created_at": "2026-05-27T08:51:16Z",
+  "closed_at": null,
+  "merged_at": null,
+  "updated_at": "2026-05-27T08:51:16Z",
+  "user": {
+   "login": "user53",
+   "type": "User"
+  }
+ },
+ {
+  "number": 19793,
+  "title": "[UI] Add EVALUATE_RELATIONSHIPS permission key",
+  "body": "## Description\r\nAdds the `EVALUATE_RELATIONSHIPS` permission key to `ui/utils/permission_constants.ts` to enable UI-side permission gating for the upcoming \"Evaluate Relationships\" button on the Designs page.\r\n\r\nThe permission key matches the entry already seeded in `docs/static/excel/keys.csv` (line 21) with subject \"Evaluate Relationships\" and action \"Evaluate relationships inside a design\".\r\n\r\nRelated To #19335 \r\n\r\n**[Signed commits](https://github.com/meshery/meshery/blob/master/CONTRIBUTING.md#signing-off-on-commits-developer-certificate-of-origin)**\r\n- [x] Yes, I signed my commits.\r\n\r\n<!--\r\nThank you for contributing to Meshery! \r\n\r\nContributing Conventions:\r\n\r\n1. Include descriptive PR titles with [<component-name>] prepended.\r\n2. Build and test your changes before submitting a PR. \r\n3. Sign your commits.\r\n4. Include before and after screenshots/terminal output.\r\n\r\nBy following the community's contribution conventions upfront, the review process will \r\nbe accelerated and your PR merged more quickly.\r\n-->\r\n",
+  "state": "open",
+  "draft": false,
+  "created_at": "2026-05-31T07:34:22Z",
+  "closed_at": null,
+  "merged_at": null,
+  "updated_at": "2026-05-31T07:34:22Z",
+  "user": {
+   "login": "user35",
+   "type": "User"
+  }
+ },
+ {
+  "number": 19867,
+  "title": "fix: restore fullscreen toggle in Registry modal",
+  "body": "## Summary\n\n- Fixes the fullscreen toggle in the Registry modal (issue #19830) — and any other shared `Modal` consumer where `isFullScreenModeAllowed` is set\n- Root cause: Meshery's `Modal.tsx` always passed `fullScreen={size === 'fullscreen'}` to the Sistent `Modal`, which evaluates to `fullScreen={false}` for the Registry modal (`size='md'`). Sistent's `Modal` manages its own fullscreen state internally via `useState(false)` but spreads external props onto `StyledDialog` **after** its own `fullScreen` state — so the externally-supplied `false` permanently overrode the toggle\n- Fix: only pass `fullScreen={true}` when `size === 'fullscreen'` is explicitly requested; omit the prop otherwise, letting Sistent's internal toggle govern the state\n\n## Test plan\n\n- [ ] Open the Registry modal and click the fullscreen icon — modal should expand to full screen\n- [ ] Click the exit-fullscreen icon — modal should return to its default size\n- [ ] Verify the same toggle works in the Workspace modal (`WorkspaceFormModal`)\n- [ ] Verify that modals using `size=\"fullscreen\"` still open in fullscreen by default\n\nCloses #19830\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)",
+  "state": "open",
+  "draft": false,
+  "created_at": "2026-06-04T08:39:47Z",
+  "closed_at": null,
+  "merged_at": null,
+  "updated_at": "2026-06-04T08:39:47Z",
+  "user": {
+   "login": "user20",
+   "type": "User"
+  }
+ },
+ {
+  "number": 19981,
+  "title": "Exclude old docs versions",
+  "body": "**Notes for Reviewers**\r\n\r\n- This PR updates this workflow's configuration to exclude javascript in the directory: docs/static/v0.8 and docs/static/v0.9.\r\n\r\n**[Signed commits](https://github.com/meshery/meshery/blob/master/CONTRIBUTING.md#signing-off-on-commits-developer-certificate-of-origin)**\r\n- [x] Yes, I signed my commits.\r\n\r\n<!--\r\nThank you for contributing to Meshery! \r\n\r\nContributing Conventions:\r\n\r\n1. Include descriptive PR titles with [<component-name>] prepended.\r\n2. Build and test your changes before submitting a PR. \r\n3. Sign your commits.\r\n4. Include before and after screenshots/terminal output.\r\n\r\nBy following the community's contribution conventions upfront, the review process will \r\nbe accelerated and your PR merged more quickly.\r\n-->\r\n",
+  "state": "open",
+  "draft": false,
+  "created_at": "2026-06-11T02:49:29Z",
+  "closed_at": null,
+  "merged_at": null,
+  "updated_at": "2026-06-11T02:49:29Z",
+  "user": {
+   "login": "user45",
+   "type": "User"
+  }
+ },
+ {
+  "number": 20023,
+  "title": "Create sulagna",
+  "body": "**Notes for Reviewers**\r\n\r\n- This PR fixes #\r\n\r\n**[Signed commits](https://github.com/meshery/meshery/blob/master/CONTRIBUTING.md#signing-off-on-commits-developer-certificate-of-origin)**\r\n- [ ] Yes, I signed my commits.\r\n\r\n<!--\r\nThank you for contributing to Meshery! \r\n\r\nContributing Conventions:\r\n\r\n1. Include descriptive PR titles with [<component-name>] prepended.\r\n2. Build and test your changes before submitting a PR. \r\n3. Sign your commits.\r\n4. Include before and after screenshots/terminal output.\r\n\r\nBy following the community's contribution conventions upfront, the review process will \r\nbe accelerated and your PR merged more quickly.\r\n-->\r\n",
+  "state": "open",
+  "draft": false,
+  "created_at": "2026-06-12T13:44:28Z",
+  "closed_at": null,
+  "merged_at": null,
+  "updated_at": "2026-06-12T13:44:28Z",
+  "user": {
+   "login": "user87",
+   "type": "User"
+  }
+ },
+ {
+  "number": 20097,
+  "title": "feat(docs): improve related models categories layout",
+  "body": "**Notes for Reviewers**\r\n\r\nThis PR fixes #18246 improves the layout of the Related Models categories section in the documentation. The changes make the content more organized, easier to read, and visually consistent. This helps users quickly find and understand related models while browsing the documentation.\r\n\r\n**[Signed commits](https://github.com/meshery/meshery/blob/master/CONTRIBUTING.md#signing-off-on-commits-developer-certificate-of-origin)**\r\n- [ ] Yes, I signed my commits.\r\n\r\n\n\n<!-- This is an auto-generated comment: release notes by coderabbit.ai -->\n\n## Summary by CodeRabbit\n\n- **Style**\n  - Improved sidebar navigation styling for clearer, more consistent presentation across screen sizes.\n  - Updated related model links to display in a responsive grid layout that adapts to desktop, tablet, and mobile widths.\n\n<!-- end of auto-generated comment: release notes by coderabbit.ai -->",
+  "state": "open",
+  "draft": false,
+  "created_at": "2026-06-17T12:28:01Z",
+  "closed_at": null,
+  "merged_at": null,
+  "updated_at": "2026-06-17T12:28:01Z",
+  "user": {
+   "login": "user72",
+   "type": "User"
+  }
+ },
+ {
+  "number": 20190,
+  "title": "[Chore]: Update to Sistent v0.21.22",
+  "body": "This pull request upgrades the @sistent/sistent dependency in meshery-ui from ^0.21.19 to ^0.21.22.\r\n\r\n**[Signed commits](https://github.com/meshery/meshery/blob/master/CONTRIBUTING.md#signing-off-on-commits-developer-certificate-of-origin)**\r\n- [x] Yes, I signed my commits.\r\n\r\n<!--\r\nThank you for contributing to Meshery! \r\n\r\nContributing Conventions:\r\n\r\n1. Include descriptive PR titles with [<component-name>] prepended.\r\n2. Build and test your changes before submitting a PR. \r\n3. Sign your commits.\r\n4. Include before and after screenshots/terminal output.\r\n\r\nBy following the community's contribution conventions upfront, the review process will \r\nbe accelerated and your PR merged more quickly.\r\n-->\r\n",
+  "state": "open",
+  "draft": false,
+  "created_at": "2026-06-22T12:48:59Z",
+  "closed_at": null,
+  "merged_at": null,
+  "updated_at": "2026-06-22T12:48:59Z",
+  "user": {
+   "login": "user76",
+   "type": "User"
+  }
+ },
+ {
+  "number": 20426,
+  "title": "[UI] Fix muddy opacity backgrounds and Disconnect severity in Connection chips",
+  "body": "**Notes for Reviewers**\r\n\r\n- This PR fixes #20424 \r\n\r\n<img width=\"157\" height=\"198\" alt=\"image\" src=\"https://github.com/user-attachments/assets/2e915deb-baee-4712-b530-0396dc4893c4\" />\r\n\r\n**[Signed commits](https://github.com/meshery/meshery/blob/master/CONTRIBUTING.md#signing-off-on-commits-developer-certificate-of-origin)**\r\n- [x] Yes, I signed my commits.\r\n\r\n<!--\r\nThank you for contributing to Meshery! \r\n\r\nContributing Conventions:\r\n\r\n1. Include descriptive PR titles with [<component-name>] prepended.\r\n2. Build and test your changes before submitting a PR. \r\n3. Sign your commits.\r\n4. Include before and after screenshots/terminal output.\r\n\r\nBy following the community's contribution conventions upfront, the review process will \r\nbe accelerated and your PR merged more quickly.\r\n-->\r\n",
+  "state": "open",
+  "draft": false,
+  "created_at": "2026-07-03T02:02:30Z",
+  "closed_at": null,
+  "merged_at": null,
+  "updated_at": "2026-07-03T02:02:30Z",
+  "user": {
+   "login": "user45",
+   "type": "User"
+  }
+ },
+ {
+  "number": 20454,
+  "title": "Add Akash Sah's introduction in meeting notes",
+  "body": "**Notes for Reviewers**\r\n\r\n- This PR fixes #\r\n\r\n**[Signed commits](https://github.com/meshery/meshery/blob/master/CONTRIBUTING.md#signing-off-on-commits-developer-certificate-of-origin)**\r\n- [ ] Yes, I signed my commits.\r\n\r\n<!--\r\nThank you for contributing to Meshery! \r\n\r\nContributing Conventions:\r\n\r\n1. Include descriptive PR titles with [<component-name>] prepended.\r\n2. Build and test your changes before submitting a PR. \r\n3. Sign your commits.\r\n4. Include before and after screenshots/terminal output.\r\n\r\nBy following the community's contribution conventions upfront, the review process will \r\nbe accelerated and your PR merged more quickly.\r\n-->\r\n",
+  "state": "open",
+  "draft": false,
+  "created_at": "2026-07-03T13:43:09Z",
+  "closed_at": null,
+  "merged_at": null,
+  "updated_at": "2026-07-03T13:43:09Z",
+  "user": {
+   "login": "user73",
+   "type": "User"
+  }
+ },
+ {
+  "number": 20505,
+  "title": "Chore: upgrade meshsync and operator",
+  "body": "v1.0.3",
+  "state": "open",
+  "draft": false,
+  "created_at": "2026-07-06T05:29:19Z",
+  "closed_at": null,
+  "merged_at": null,
+  "updated_at": "2026-07-06T05:29:19Z",
+  "user": {
+   "login": "user35",
+   "type": "User"
+  }
+ },
+ {
+  "number": 20796,
+  "title": "[Docs] Fix illegible contrast on secondary alerts",
+  "body": "Fixes #19287\r\n\r\nChanges Made:\r\nReplaced hardcoded light gray values in the `_alert.scss` file with theme-adaptive variables (`--color-secondary-medium`, `--color-grey-dark-alpha`, and `--color-secondary-dark`) to ensure the secondary alert box has high contrast and remains legible in both Light and Dark modes.\r\n",
+  "state": "open",
+  "draft": false,
+  "created_at": "2026-07-20T04:03:21Z",
+  "closed_at": null,
+  "merged_at": null,
+  "updated_at": "2026-07-20T04:03:21Z",
+  "user": {
+   "login": "user59",
+   "type": "User"
+  }
+ },
+ {
+  "number": 20814,
+  "title": "[Server] Fix master build break: restore loop in auto_register.go toConnectionDefinitions",
+  "body": "## Notes for Reviewers\n\n**master currently does not compile** - a hotfix.\n\n### What broke\nA GitHub suggestion applied in #20733 (commit `d496a8a`, \"Update auto_register.go\") removed **two lines** from `toConnectionDefinitions` - the slice declaration and the `for _, connectionEntity := range connectionEntities {` loop header - but left the loop body intact. The result:\n\n```\nserver/machines/helpers/auto_register.go:181:4: continue is not in a loop\nserver/machines/helpers/auto_register.go:185:2: syntax error: non-declaration statement outside function body (typecheck)\n```\n\n### Impact\n`server/machines/helpers` is imported by both `server` and `mesheryctl`, so every dependent job is red on master and on every open PR (they build against master): `golangci-lint-server`, `golangci-lint-cli`, `build-meshery / Build image`, and the integration tests.\n\n### Fix\nRestore the `connectionDefs := make(...)` declaration and the `for range` header. No behavior change - it reinstates the function's original body.\n\nVerified: `go build ./...` (server) + `go build ./...` (mesheryctl), `go vet`, and `golangci-lint run ./machines/helpers/` all clean.\n\n**[Signed commits]**\n- [x] Yes, I signed my commits.\n",
+  "state": "open",
+  "draft": false,
+  "created_at": "2026-07-20T14:02:54Z",
+  "closed_at": null,
+  "merged_at": null,
+  "updated_at": "2026-07-20T14:02:54Z",
+  "user": {
+   "login": "user77",
+   "type": "User"
+  }
+ },
+ {
+  "number": 20910,
+  "title": "[server] Retry transient remote-provider errors before failing login (#20721)",
+  "body": "**Notes for Reviewers**\r\n\r\n- Relates to #20721 (mechanism confirmed via unit test; not marked as a full fix yet — awaiting the reporter's confirmation against their actual DigitalOcean Kubernetes setup)\r\n\r\n`SessionInjectorMiddleware` currently returns a hard 503 on the very first transient failure of `provider.GetUserDetails()` (e.g. a cold connection to a remote provider like Layer5 Cloud), with no retry — even though the existing code already avoids destroying the session in this case. On a freshly-provisioned cluster, the first outbound call to a remote provider is exactly the kind of request likely to hit a cold-start timeout, which matches the reported \"first login attempt fails, immediate retry succeeds\" symptom.\r\n\r\nThis PR adds a small bounded retry (2 attempts, 300ms backoff) around that call before falling through to the existing transient/genuine-error handling. No other behavior changes.\r\n\r\nBefore:\r\nmiddlewares_test.go:310: expected 200 after retry, got 503\r\nmiddlewares_test.go:313: expected 2 calls (fail once, succeed on retry), got 1\r\n--- FAIL\r\n\r\nAfter:\r\n=== RUN TestSessionInjectorMiddleware_RetriesTransientProviderError\r\n--- PASS: TestSessionInjectorMiddleware_RetriesTransientProviderError (0.30s)\r\nPASS\r\nok github.com/meshery/meshery/server/handlers\n\n<!-- This is an auto-generated comment: release notes by coderabbit.ai -->\n\n## Summary by CodeRabbit\n\n- **Bug Fixes**\n  - Improved resilience when temporarily unavailable service providers are contacted by automatically retrying transient failures.\n  - Updated the Meshery Design Embed “Learn More” link to the current extensions documentation.\n\n- **Tests**\n  - Strengthened relationship evaluation checks and idempotency validation.\n  - Enabled performance testing for an additional profile.\n  - Improved end-to-end coverage for project metadata and service lifecycle workflows.\n\n<!-- end of auto-generated comment: release notes by coderabbit.ai -->",
+  "state": "open",
+  "draft": false,
+  "created_at": "2026-07-23T07:23:15Z",
+  "closed_at": null,
+  "merged_at": null,
+  "updated_at": "2026-07-23T07:23:15Z",
+  "user": {
+   "login": "user84",
+   "type": "User"
+  }
+ },
+ {
+  "number": 23384,
+  "title": "fix(ui): label design configurator selectors",
+  "body": "Show labels for the category and model selectors in the design configurator.\n\nSee the issue\n\nThe modified component passed ESLint. Images show an isolated rendering using the project's selector components and dark theme; the full playground requires login.\n\nBefore:\n\n![Before](https://raw.githubusercontent.com/0xmaster7/meshery/issue-ui-screenshots-23200-22853/configurator-before.png)\n\nAfter, with a category selected:\n\n![After](https://raw.githubusercontent.com/0xmaster7/meshery/issue-ui-screenshots-23200-22853/configurator-after.png)\n\n\n<!-- This is an auto-generated comment: release notes by coderabbit.ai -->\n\n<!-- coderabbit-ai-generated:v1 -->\n\n## Summary by CodeRabbit\n\n* **Bug Fixes**\n  * Changing categories now clears the selected model, preventing a model from the previous category from remaining selected.\n* **Style**\n  * Category and model selectors now use labels instead of placeholder text for empty selections.\n\n<!-- end of auto-generated comment: release notes by coderabbit.ai -->",
+  "state": "open",
+  "draft": false,
+  "created_at": "2026-11-13T00:37:05Z",
+  "closed_at": null,
+  "merged_at": null,
+  "updated_at": "2026-11-13T00:37:05Z",
+  "user": {
+   "login": "user66",
+   "type": "User"
+  },
+  "sidebar": [
+   23200
+  ]
+ }
+]

@@ -1,6 +1,6 @@
 // Fast checks of everything that is not the model: cleaning issue text, finding a repo's
-// template, keyword search, ranking, how the test questions are built, PR links and the backlog
-// sweep's requests.
+// template, keyword search, ranking, how the test questions are built, PR links, the backlog
+// sweep's requests and the Action's comment.
 import assert from 'node:assert/strict';
 import { issueText, templateLines } from '../src/text.js';
 import { BM25, tokens } from '../src/bm25.js';
@@ -10,6 +10,7 @@ import { groups, questions } from '../scripts/data.mjs';
 import { score, rankOfRight } from '../scripts/measure.mjs';
 import { linkedIssues, dupLinks, sameIssue, prText, prTemplate, isBot } from '../src/prs.js';
 import { clusters, closeRequests, send } from '../src/sweep.js';
+import { itemOf, commentBody, MARKER } from '../action/check.mjs';
 
 let passed = 0;
 const pending = [];
@@ -169,6 +170,24 @@ t('sweep: sends one at a time, looks up missing ids once, stops when GitHub refu
   assert.equal(out[2].error, 'Bad credentials');
   assert.deepEqual(calls.map(([m, p]) => `${m} ${p}`), ['GET /repos/o/r/issues/1', 'PATCH /repos/o/r/issues/2', 'PATCH /repos/o/r/issues/3', 'PATCH /repos/o/r/issues/4']);
   assert.deepEqual(calls[1][2], { state: 'closed', state_reason: 'duplicate', duplicate_issue_id: 5001 });
+});
+
+t('Action: which events it acts on', () => {
+  assert.equal(itemOf({ issue: { number: 3, state: 'open', title: 'a', body: null, user: { login: 'x', type: 'User' } } }).kind, 'issue');
+  assert.equal(itemOf({ pull_request: { number: 4, state: 'open', title: 'b', body: '', user: { login: 'x' } } }).kind, 'pr');
+  assert.match(itemOf({ issue: { number: 5, state: 'open', pull_request: {}, user: {} } }).skip, /not about/);
+  assert.match(itemOf({ issue: { number: 6, state: 'closed', user: {} } }).skip, /not open/);
+  assert.match(itemOf({ pull_request: { number: 7, state: 'open', user: { login: 'dependabot[bot]', type: 'Bot' } } }).skip, /bot/);
+});
+
+t('Action: one quiet comment, or none', () => {
+  assert.equal(commentBody({ kind: 'issue', matches: [], fixes: [] }), null);
+  const c = commentBody({ kind: 'pr', matches: [{ n: 8, title: 'Fix  login\n', label: 'open PR' }], fixes: [{ issue: 3, by: 5, state: 'open' }, { issue: 4, by: 6, state: 'merged' }] });
+  assert.ok(c.startsWith(MARKER));
+  assert.ok(c.includes('#3 is already being fixed in PR #5.'));
+  assert.ok(c.includes('#4 was already fixed in PR #6, which is merged.'));
+  assert.ok(c.includes('- #8 Fix login (open PR)'));
+  assert.ok(!/close[sd]? #|fix(es)? #/i.test(c)); // never a keyword that would make GitHub link or close anything
 });
 
 await Promise.all(pending);

@@ -1,0 +1,407 @@
+[
+ {
+  "number": 41275,
+  "id": 1041275,
+  "title": "Recording links to Zed office hours!",
+  "body": "### Summary\n\nWe launched Zed office hours in November 2025, and this is what we have to show for. See recording links to each office hours below. And subscribe to our luma calendar to get updates on our 2026 schedule: https://luma.com/zedindustries\n\nTo inifinity, and beyond!!\n\n**November 5 - PR Reviews with Conrad Irwin**\n\n- Recording link: https://us06web.zoom.us/rec/share/M2A4axIHN7GAUofA4N2z6hqSD82u1NwE_Czial-L9jYXQnN2_BahHEbqbCS_sMyK.Y3H7mCxv1kkCwuDd \n- Passcode: c@G2y^Pd\n\n**November 18 - What's on our roadmap? with Max Brunsfeld, Zed co-founder, and Franciska Dethlefsen, Head of Growth & Marketing**\n\n- Recording link: https://us06web.zoom.us/rec/share/62jv__d3ETp51uLJB7-ScrA4Rb0qnydg_pb39emTqXCf2SCzwL_4GmqZyWzSCHo7.CT_GUSp6J6WioXBq \n- Passcode: t2B5n^e.\n\n**December 9 - GPUI Office Hours with Mikayla Maki**\n\n- Recording link: https://us06web.zoom.us/rec/share/exiwttkwUIQLj2n-udPtEgD-lPt1_0QYX29McUt47Qnht_wI428FDQ3JJJ0ssV6n.Jb8Cz4TiJ9tt_fS8 \n- Passcode: ^znp67^0",
+  "state": "open",
+  "state_reason": null,
+  "created_at": "2025-10-27T11:34:37Z",
+  "closed_at": null,
+  "updated_at": "2025-10-27T11:34:37Z",
+  "user": {
+   "login": "user50",
+   "type": "User"
+  }
+ },
+ {
+  "number": 41585,
+  "id": 1041585,
+  "title": "AI: Adding My Own AI Models with same url and different keys.",
+  "body": "### Summary\n\n<!-- Please insert a one line summary of the issue below -->\nNot able to use multiple AI models(OpenAI compatiable) with same url but different keys .\n\n### Description\n<!--  Describe with sufficient detail to reproduce from a clean Zed install. -->\nI tried adding my own AI models deployed on LiteLLM llmproxy on a private cloud.\nAll have same url, but different keys. And Each has access to specific models.\nSo I'm able to add all models, but when I switch between them, I have to again add key.\n\nI did however able to make them work by manipulating urls a little bit, ie: https:llmproxy.example.com for one model and \nhttps:llmproxy.example.com/ for another.\n\n\n### Zed Version and System Specs\n\nZed: v0.209.6 (Zed) \nOS: Windows 10.0.26100 (Windows version is 11)\nMemory: 15.6 GiB\nArchitecture: x86_64\nGPU: Intel(R) Iris(R) Xe Graphics || Intel Corporation || 32.0.101.7076",
+  "state": "open",
+  "state_reason": null,
+  "created_at": "2025-10-30T16:04:29Z",
+  "closed_at": null,
+  "updated_at": "2025-10-30T16:04:29Z",
+  "user": {
+   "login": "user69",
+   "type": "User"
+  }
+ },
+ {
+  "number": 41961,
+  "id": 1041961,
+  "title": "Title bar's height is strangely long on Linux",
+  "body": "### Summary\n\n<img width=\"1920\" height=\"1080\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/5d4e7f2f-8b07-43e4-ba74-5a69e28113f7\" />\nI don't know what's wrong, but the bar is very strange and long. Can anyone help? I want to hide it so it's small.\n\n### Zed Version and System Specs\n\nZed 0.210.4 – /usr/lib/zed/zed-editor\n\nusing BSPWM",
+  "state": "open",
+  "state_reason": null,
+  "created_at": "2025-11-05T04:42:25Z",
+  "closed_at": null,
+  "updated_at": "2025-11-05T04:42:25Z",
+  "user": {
+   "login": "user57",
+   "type": "User"
+  }
+ },
+ {
+  "number": 42031,
+  "id": 1042031,
+  "title": "Memory use balloons when using Find in Project",
+  "body": "### Summary\n\n<!-- Begin your issue with a one sentence summary -->\nI've recently had my Mac run out of memory due to Zed numerous times. I've isolated it down to doing searches within a project.\n\n### Description\n\nSteps to reproduce:\n1. Open a very large project -- the project I'm using is all my work codebases in one project. (This has not been an issue for Zed in the past year ever.)\n2. Open Activity Monitor so you can see Zed's memory footprint.\n3. Command + Shift + F to search\n4. Search for something that can be found in the project\n5. Watch the memory balloon up to 10, 20, 30 GB... but maybe you'll be lucky and it's only a few GB\n6. Close the search... the memory is never reclaimed\n\n**Expected Behavior**:\nA search shouldn't be generating tens of GB of memory footprint I don't think.\n\n**Actual Behavior**:\nAfter a while MacOS warns you that you're out of memory.\n\nDon't think I can attach the Zed.log without breaking work security guidelines. I did not see anything relevant to searching in there.\n\n\n### Zed Version and System Specs\n\nZed: v0.210.4 (Zed) \nOS: macOS 26.1\nMemory: 16 GiB\nArchitecture: aarch64",
+  "state": "open",
+  "state_reason": null,
+  "created_at": "2025-11-05T20:36:19Z",
+  "closed_at": null,
+  "updated_at": "2025-11-05T20:36:19Z",
+  "user": {
+   "login": "user30",
+   "type": "User"
+  }
+ },
+ {
+  "number": 42666,
+  "id": 1042666,
+  "title": "feat: Add additional AI settings to settings editor",
+  "body": "### Summary\n\nAdd a user interface to the settings editor for configuring additional AI-related settings.\n\nThe settings editor should be updated to include UI for managing the following AI settings:\n-   MCP (Model Context Protocol) servers\n-   Agent servers\n-   Non-file settings in the key ring (e.g., API keys)\n\n### Zed Version and System Specs\n\nn/a\n\n### If applicable, attach your `Zed.log` file to this issue.\n\n<details><summary>Zed.log</summary>\n\n<!-- Paste your log inside the code block. -->\n```log\n\n```\n\n</details>\n",
+  "state": "open",
+  "state_reason": null,
+  "created_at": "2025-11-13T21:18:35Z",
+  "closed_at": null,
+  "updated_at": "2025-11-13T21:18:35Z",
+  "user": {
+   "login": "user83",
+   "type": "User"
+  }
+ },
+ {
+  "number": 43353,
+  "id": 1043353,
+  "title": "Cannot manipulate text selection in diagnostics popovers using keyboard shortcuts",
+  "body": "### Summary\n\n### Description\n\nAfter selecting text in a diagnostics popover, the standard text selection keyboard shortcuts should be usable, e.g. shift-left/right, shift-opt-left/right, and shift-cmd-left/right.\n\nSteps to reproduce:\n1. Write some code that produces an inline diagnostic error/warning\n2. Hover the mouse cursor over the line to show the popover\n3. Click-and-drag to select some text in the popover (notice how the cursor no longer appears in the buffer, because the popover has the focus)\n4. While the popover has focus, use keyboard shortcuts (e.g. shift-left/right) to manipulate the selected text\n\n**Expected Behavior**: The keyboard shortcut manipulates the selected text in the popover\n**Actual Behavior**: The keyboard shortcut manipulates the buffer text, closing the popover\n\n### Zed Version and System Specs\n\nZed: v1.2.4+stable.275.0ed077852ca4b04fbdc5d3781a85a491da5f011b (Zed) \nOS: macOS 15.7.5\nMemory: 16 GiB\nArchitecture: x86_64",
+  "state": "open",
+  "state_reason": null,
+  "created_at": "2025-11-23T11:01:17Z",
+  "closed_at": null,
+  "updated_at": "2025-11-23T11:01:17Z",
+  "user": {
+   "login": "user91",
+   "type": "User"
+  }
+ },
+ {
+  "number": 43495,
+  "id": 1043495,
+  "title": "Deprecate Lexical in favor of Expert",
+  "body": "### Summary\n\nDeprecate [Lexical](https://github.com/lexical-lsp/lexical) in favor of [Expert](https://github.com/elixir-lang/expert).\n\n### Description\n\nLexical is no longer [being worked on](https://github.com/lexical-lsp/lexical?tab=readme-ov-file#note-development-on-lexical-will-slow-while-we-transition-to-the-new-combined-effort-expert), and Expert is the recommended LSP instead.\n\nWe’ll need to update [our docs](https://zed.dev/docs/languages/elixir#choosing-a-language-server) as well.",
+  "state": "open",
+  "state_reason": null,
+  "created_at": "2025-11-25T21:38:48Z",
+  "closed_at": null,
+  "updated_at": "2025-11-25T21:38:48Z",
+  "user": {
+   "login": "user39",
+   "type": "User"
+  }
+ },
+ {
+  "number": 43671,
+  "id": 1043671,
+  "title": "avoid hardcoding keyring label for platform Linux",
+  "body": "### Reproduction steps\n\nThe Linux platform impl currently hardcodes the keyring label to `zed-github-account`, see: https://github.com/zed-industries/zed/blob/main/crates/gpui/src/platform/linux/platform.rs#L40\n\n\n### Current vs. Expected behavior\n\nCould we introduce a `set_keyring_label`  method and fallback to the currently hardcoded value if not provided?\nLet me know if/how you want to solve it, and I can open a PR.\n\n### If applicable, attach your Zed log file to this issue.\n\n<details><summary>Zed.log</summary>\n\n<!-- Paste your log inside the code block. -->\n```log\n\n```\n\n</details>\n\n\n### If applicable, attach your relevant Zed settings to this issue\n\n<details><summary>settings.json</summary>\n\n<!-- Paste your settings inside the code block. -->\n```json\n\n```\n\n</details>\n\n\n### If applicable, provide details about your model provider\n\n_No response_\n\n### Zed version and system specs\n\nZed: v0.214.5 (Zed) \nOS: Linux Wayland ubuntu 25.04\nMemory: 60.7 GiB\nArchitecture: x86_64\nGPU: AMD Radeon RX 5700 XT (RADV NAVI10) || radv || Mesa 25.0.7-0ubuntu0.25.04.2\n\n### If you are using WSL on Windows, what flavor of Linux are you using?\n\nArch Linux",
+  "state": "open",
+  "state_reason": null,
+  "created_at": "2025-11-27T14:02:19Z",
+  "closed_at": null,
+  "updated_at": "2025-11-27T14:02:19Z",
+  "user": {
+   "login": "user21",
+   "type": "User"
+  }
+ },
+ {
+  "number": 44115,
+  "id": 1044115,
+  "title": "Git blame shortcut inserts character",
+  "body": "### Reproduction steps\n\n1. Use `Alt-G + B` to toggle column git blame\n2. Notice that the letter 'G' appears in the file\n\n### Current vs. Expected behavior\n\nCurrent: 'G' gets inserted\nExpected: No 'G' when using keyboard shortcut\n\n<img width=\"223\" height=\"35\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/238be58d-2c3e-4ce3-a7bf-5ab36ee8741f\" />\n\n### Zed version and system specs\n\nZed: v0.215.3-90+fda162bf3d9a11d18e07cbf2b488829450135d34 (Zed) \nOS: Linux Wayland ubuntu 24.04\nMemory: 62 GiB\nArchitecture: x86_64\nGPU: AMD Radeon 890M (RADV GFX1150) || radv || Mesa 25.0.7-0ubuntu0.24.04.2\n\n### Attach Zed log file\n\n<details><summary>Zed.log</summary>\n\n<!-- Paste your log inside the code block. -->\n```log\n\n```\n\n</details>\n\n\n### Relevant Zed settings\n\n<details><summary>settings.json</summary>\n\n<!-- Paste your settings inside the code block. -->\n```json\n\n```\n\n</details>\n\n\n### (for AI issues) Model provider details\n\n_No response_\n\n### If you are using WSL on Windows, what flavor of Linux are you using?\n\nUbuntu",
+  "state": "open",
+  "state_reason": null,
+  "created_at": "2025-12-04T04:13:37Z",
+  "closed_at": null,
+  "updated_at": "2025-12-04T04:13:37Z",
+  "user": {
+   "login": "user77",
+   "type": "User"
+  }
+ },
+ {
+  "number": 44182,
+  "id": 1044182,
+  "title": "Zed's LSP requests in LSP logs aren't formatted",
+  "body": "### Reproduction steps\n\n1. Start Zed\n2. Run `dev: open language server logs`\n\n### Current vs. Expected behavior\n\nCurrent behavior: the LSP requests aren't formatted, which makes them harder to read.\n\n<img width=\"1840\" height=\"1093\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/103e9a70-e0bd-4bc1-9e25-73ccebaa1811\" />\n\nExpected behavior: the LSP requests are formatted (preferably with 2 spaces, to take less space)\n\n### Zed version and system specs\n\nZed: v0.215.3-90+fda162bf3d9a11d18e07cbf2b488829450135d34 (Zed) \nOS: macOS 26.1\nMemory: 64 GiB\nArchitecture: aarch64\n\n### Attach Zed log file\n\nn/a\n\n### Relevant Zed settings\n\nn/a\n\n### (for AI issues) Model provider details\n\n_No response_\n\n### If you are using WSL on Windows, what flavor of Linux are you using?\n\nNone",
+  "state": "open",
+  "state_reason": null,
+  "created_at": "2025-12-04T20:57:56Z",
+  "closed_at": null,
+  "updated_at": "2025-12-04T20:57:56Z",
+  "user": {
+   "login": "user47",
+   "type": "User"
+  }
+ },
+ {
+  "number": 45726,
+  "id": 1045726,
+  "title": "Signature help popover overlaps the completions menu when there isn’t enough room",
+  "body": "### Reproduction steps\n\nThis issue is not consistent at all and I've only seen this in Rust as you all can see in attached video. I know there is a workaround by just disabling that setting, but I wanted to point it out as it disrupts the workflow sometimes. Thanks!\n\nSteps:\n1. turn on show_signature_help_after_edits setting\n2. edit any std lib function in Rust\n\n### Current vs. Expected behavior\n\nhttps://github.com/user-attachments/assets/fabb8517-dc04-4f9c-834c-4bf72acfdfdd\n\n### Zed version and system specs\n\nZed: v0.217.3+stable.105.80433cb239e868271457ac376673a5f75bc4adb1 (Zed) \nOS: Windows 10.0.26200\nMemory: 23.7 GiB\nArchitecture: x86_64\nGPU: Intel(R) Iris(R) Xe Graphics || Intel Corporation || 32.0.101.7076\n\n### Attach Zed log file\n\n<details><summary>Zed.log</summary>\n\n<!-- Paste your log inside the code block. -->\n```log\n\n```\n\n</details>\n\n\n### Relevant Zed settings\n\n<details><summary>settings.json</summary>\n\n<!-- Paste your settings inside the code block. -->\n```json\n\n```\n\n</details>\n\n\n### Relevant Keymap\n\n<details><summary>keymap.json</summary>\n\n<!-- Paste your keymap file inside the code block. -->\n```json\n\n```\n\n</details>\n\n\n### (for AI issues) Model provider details\n\n_No response_\n\n### If you are using WSL on Windows, what flavor of Linux are you using?\n\nNone",
+  "state": "open",
+  "state_reason": null,
+  "created_at": "2025-12-27T02:02:08Z",
+  "closed_at": null,
+  "updated_at": "2025-12-27T02:02:08Z",
+  "user": {
+   "login": "user39",
+   "type": "User"
+  }
+ },
+ {
+  "number": 45912,
+  "id": 1045912,
+  "title": "Apostrophes get highlighted as if they were brackets when on markdown",
+  "body": "### Reproduction steps\n\nThis is just plain text on a normal .md file that contains no code snippets, so its a bit annoying and distracting.\n\n<img width=\"539\" height=\"29\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/586e3af2-637e-4973-9097-079095897f35\" />\n\n### Current vs. Expected behavior\n\nApostrophes should not get highlighted when navigating through plain text on a md file\n\n### Zed version and system specs\n\nZed: v0.217.3+stable.105.80433cb239e868271457ac376673a5f75bc4adb1 (Zed) \nOS: macOS 15.3.1\nMemory: 16 GiB\nArchitecture: aarch64\n\n### Attach Zed log file\n\n<details><summary>Zed.log</summary>\n\n<!-- Paste your log inside the code block. -->\n```log\n\n```\n\n</details>\n\n\n### Relevant Zed settings\n\n<details><summary>settings.json</summary>\n\n<!-- Paste your settings inside the code block. -->\n```json\n\n```\n\n</details>\n\n\n### Relevant Keymap\n\n<details><summary>keymap.json</summary>\n\n<!-- Paste your keymap file inside the code block. -->\n```json\n\n```\n\n</details>\n\n\n### (for AI issues) Model provider details\n\n_No response_\n\n### If you are using WSL on Windows, what flavor of Linux are you using?\n\nNone",
+  "state": "open",
+  "state_reason": null,
+  "created_at": "2025-12-31T18:55:21Z",
+  "closed_at": null,
+  "updated_at": "2025-12-31T18:55:21Z",
+  "user": {
+   "login": "user31",
+   "type": "User"
+  }
+ },
+ {
+  "number": 48498,
+  "id": 1048498,
+  "title": "Zed (Vim mode): gd \"Go to Definition\" stops working after some time - only fixed by restarting",
+  "body": "### Reproduction steps\n\n1. Open Zed (latest version).\n2. Enable Vim mode.\n3. Open a frontend project (e.g., React, Vue, or similar framework).\n4. Use the `gd` command (Go to Definition) — it works initially.\n5. Continue working in the project for some time.\n6. Attempt to use `gd` again — it stops working at some point during the session.\n7. Fully restart Zed (close and reopen) to temporarily restore the functionality\n\nDiscussion about it: https://github.com/zed-industries/zed/discussions/46439\n\n### Current vs. Expected behavior\n\n|                | Current Behavior                                                                                   | Expected Behavior                                  |\n|:---------------|:--------------------------------------------------------------------------------------------------|:---------------------------------------------------|\n| Go to Definition (`gd`) | Works at first, but randomly stops working after some time. Only restarting Zed restores it. | Should consistently work throughout the session.   |\n\n### Zed version and system specs\n\nZed 0.221.5 - 0.221.5+stable.141.03bfbf242c57f7fdb45708d63d74182898edf2c5\nMacOS\n",
+  "state": "open",
+  "state_reason": null,
+  "created_at": "2026-02-05T16:31:01Z",
+  "closed_at": null,
+  "updated_at": "2026-02-05T16:31:01Z",
+  "user": {
+   "login": "user95",
+   "type": "User"
+  }
+ },
+ {
+  "number": 50392,
+  "id": 1050392,
+  "title": "Presence of animated elements generate layout recalculation and repaint",
+  "body": "### Reproduction steps\n\nThe simples reproduction scenario I found is to run AI task so that progress indicator is present in a viewport.\n\n### Current vs. Expected behavior\n\nWhen animation items are on the viewport, Zed uses about 30-40% CPU and recalculates the entire application layout.\n\n[Sample of Zed.txt](https://github.com/user-attachments/files/25621376/Sample.of.Zed.txt)\n\nhttps://youtu.be/HQGXJNgfaBc\n\n### Zed version and system specs\n\nZed: v0.225.10+stable.184.7c950f7b7c11ed485b0e7d72216ca36ebc86b58b (Zed) \nOS: macOS 15.7.4\nMemory: 36 GiB\nArchitecture: aarch64\n\n### Attach Zed log file\n\n<details><summary>Zed.log</summary>\n\n<!-- Paste your log inside the code block. -->\n```log\n\n```\n\n</details>\n\n\n### Relevant Zed settings\n\n<details><summary>settings.json</summary>\n\n<!-- Paste your settings inside the code block. -->\n```json\n\n```\n\n</details>\n\n\n### Relevant Keymap\n\n<details><summary>keymap.json</summary>\n\n<!-- Paste your keymap file inside the code block. -->\n```json\n\n```\n\n</details>\n\n\n### (for AI issues) Model provider details\n\n_No response_\n\n### If you are using WSL on Windows, what flavor of Linux are you using?\n\nNone",
+  "state": "open",
+  "state_reason": null,
+  "created_at": "2026-02-28T13:06:32Z",
+  "closed_at": null,
+  "updated_at": "2026-02-28T13:06:32Z",
+  "user": {
+   "login": "user49",
+   "type": "User"
+  }
+ },
+ {
+  "number": 50776,
+  "id": 1050776,
+  "title": "Stale link highlighting on hover",
+  "body": "### Reproduction steps\n\nWhen I am in the middle of editing, pressing Ctrl would counter-intuitively highlight links even when the mouse cursor is hidden. \n\n<img width=\"506\" height=\"518\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/f9f1a995-a328-4e82-bd85-079d2f323597\" />\n\n### Current vs. Expected behavior\n\nExpected: The link is hidden when the cursor is hidden.\n\n### Zed version and system specs\n\nZed: v0.223.5+stable (Zed) \nOS: Linux Wayland arch unknown\nMemory: 15.5 GiB\nArchitecture: x86_64\n\n### Attach Zed log file\n\n\n\n\n### Relevant Zed settings\n\n_No response_\n\n### Relevant Keymap\n\n_No response_\n\n### (for AI issues) Model provider details\n\n_No response_\n\n### If you are using WSL on Windows, what flavor of Linux are you using?\n\nNone",
+  "state": "open",
+  "state_reason": null,
+  "created_at": "2026-03-05T03:45:03Z",
+  "closed_at": null,
+  "updated_at": "2026-03-05T03:45:03Z",
+  "user": {
+   "login": "user45",
+   "type": "User"
+  }
+ },
+ {
+  "number": 52500,
+  "id": 1052500,
+  "title": "OpenCode agent creates a lot of empty sessions",
+  "body": "### Reproduction steps\n\n1. Install the opencode zed agent\n2. Open the agent panel\n3. close and open zed again\n4. open opencode \n5. see 3 empty but named sessions\n\n### Current vs. Expected behavior\n\nCreates multiple useless sessions just by starting zed.\n\nExpected: start the session only when I type something in to it.\n\n### Zed version and system specs\n\nZed: v0.229.0+stable.206.7c07887d9555953bca7fe78417602114092ef8c8 (Zed) \nOS: macOS 15.7.3\nMemory: 48 GiB\nArchitecture: aarch64\n\n### Attach Zed log file\n\nNothing meaningful there\n\n### Relevant Zed settings\n\n<details><summary>settings.json</summary>\n\n<!-- Paste your settings inside the code block. -->\n```json\n...\n\"agent_servers\": {\n    \"opencode\": {\n      \"type\": \"registry\",\n      \"default_mode\": \"plan\"\n    }\n  },\n...\n```\n\n</details>\n\n\n### Relevant Keymap\n\nvim mode, default.\n\n### (for AI issues) Model provider details\n\n_No response_\n\n### If you are using WSL on Windows, what flavor of Linux are you using?\n\nNone",
+  "state": "open",
+  "state_reason": null,
+  "created_at": "2026-03-26T14:57:43Z",
+  "closed_at": null,
+  "updated_at": "2026-03-26T14:57:43Z",
+  "user": {
+   "login": "user23",
+   "type": "User"
+  }
+ },
+ {
+  "number": 52658,
+  "id": 1052658,
+  "title": "Encoding: Cannot convert UTF-8 with BOM to UTF-8 without BOM; no separate options in Reopen with Encoding",
+  "body": "### Reproduction steps\n\n1. Open or create a file encoded in **UTF-8 with BOM**.\n2. In Zed, press the shortcut **`Ctrl+K N`** to open the **Reopen with Encoding** panel.\n3. Look for UTF-8 related encoding options.\n\n### Current vs. Expected behavior\n\n**Current Behavior**:\nThe **Reopen with Encoding** panel lists only a single `UTF-8` option that conflates **UTF-8 with BOM** and **UTF-8 without BOM**.\nThere is no way to explicitly switch a UTF-8 with BOM file to UTF-8 without BOM via the encoding menu.\n\n**Expected Behavior**:\nThe **Reopen with Encoding** panel should provide **two distinct UTF-8 options**:\n- UTF-8 (without BOM)\n- UTF-8 (with BOM)\nUsers should be able to freely convert between UTF-8 with BOM and UTF-8 without BOM.\n\n### Zed version and system specs\n\nZed: v0.227.0+dev.411.be5763632dccb33470ca233c36ccd9e5e790e3b2 (Zed Dev be5763632dccb33470ca233c36ccd9e5e790e3b2) \nOS: Windows 10.0.26200\nMemory: 15.7 GiB\nArchitecture: x86_64\nGPU: Intel(R) UHD Graphics || Intel Corporation || 31.0.101.5333",
+  "state": "open",
+  "state_reason": null,
+  "created_at": "2026-03-29T09:18:31Z",
+  "closed_at": null,
+  "updated_at": "2026-03-29T09:18:31Z",
+  "user": {
+   "login": "user84",
+   "type": "User"
+  }
+ },
+ {
+  "number": 53584,
+  "id": 1053584,
+  "title": "Cltr+space in JSDoc @linkcode does not suggest matching symbols",
+  "body": "### Reproduction steps\n\nCreate a TypeScript file with the following contents, then follow the instructions in the comments:\n\n```ts\n/**\n * Press Ctrl+space after the `g` in {@linkcode g}  <-- should suggest `greet`\n* Cltr+click on {@linkcode greet} does nagivate to the `greet method.`\n */\nclass Person {\n   constructor(private name: string) {\n      \n   }\n\n   greet(): string {\n      return 'Hello ' + this.name;  // Crl+space after just `this.n` does suggest \"name\"\n   }\n}\n\nconst p = new Person('Zed');\np.greet();\n\n/**\n * Press Ctrl+space after the `g`: {@linkcode Person#g}  <-- should suggest `greet`\n */\n```\n\n\n### Current vs. Expected behavior\n\nCurrent behavior: nothing happens when pressing Ctrl+Space as indicated.\n\nExpected: suggest matching symbols (\"greet\" in this case)\n\n### Zed version and system specs\n\nZed: v0.231.1+stable.213.e71b6aa44ffaac9bdaf986288289359e6f1b3572 (Zed) \nOS: Linux Wayland tuxedo 24.04\nMemory: 62.5 GiB\nArchitecture: x86_64\nGPU: Intel(R) Iris(R) Xe Graphics (ADL GT2) || Intel open-source Mesa driver || Mesa 25.2.8-1~24.04-tux1\n",
+  "state": "open",
+  "state_reason": null,
+  "created_at": "2026-04-10T05:39:34Z",
+  "closed_at": null,
+  "updated_at": "2026-04-10T05:39:34Z",
+  "user": {
+   "login": "user40",
+   "type": "User"
+  }
+ },
+ {
+  "number": 53838,
+  "id": 1053838,
+  "title": "In the terminal, pressing Ctrl+Shift+V and then Space causes the terminal to break",
+  "body": "### Reproduction steps\n\n1. Open a terminal.\n2. Type the start of a command (e.g., `echo `or `git checkout `).\n3. Paste some text from your clipboard using Ctrl+Shift+V, then press space, all in one extremely-fast swift motion. Press space before you've released Ctrl+Shift+V.\n\n### Current vs. Expected behavior\n\nThe shell doesn't let you type or backspace. The block cursor moves to the bottom-left corner of the terminal. Interestingly, you can still do Ctrl+Shift+V to paste, despite all other keys/actions being blocked.\n\nI'd expect it to paste the text, then type a space after what you pasted.\n\n### Zed version and system specs\n\nZed: v0.231.2+stable (Zed) \nOS: Linux Wayland cachyos unknown\nArchitecture: x86_64\n\nShell: fish shell\n\n### Attach Zed log file\n\nNothing in the logs.\n\n### Relevant Zed settings\n\nNone\n\n### Relevant Keymap\n\nNone.\n\n### (for AI issues) Model provider details\n\n_No response_\n\n### If you are using WSL on Windows, what flavor of Linux are you using?\n\nArch Linux",
+  "state": "open",
+  "state_reason": null,
+  "created_at": "2026-04-13T20:34:16Z",
+  "closed_at": null,
+  "updated_at": "2026-04-13T20:34:16Z",
+  "user": {
+   "login": "user3",
+   "type": "User"
+  }
+ },
+ {
+  "number": 54776,
+  "id": 1054776,
+  "title": "Edit predictions: some custom models predict markdown code blocks",
+  "body": "### Reproduction steps\n\nSet up edit predictions as described below\n\n### Current vs. Expected behavior\n\nCurrent behavior: models always predict with a markdown formatted code block (instead of code directly)\nExpected behavior: model predicts code directly, and NO markdown code block gets suggested in completion\n\n### Zed version and system specs\n\nZed: v0.234.5+preview.249.13d32b0e55101aab12ac5fbd854bd1152a6d0995 (Zed Preview) \nOS: Windows 10.0.26100\nMemory: 15.8 GiB\nArchitecture: x86_64\nGPU: Intel(R) UHD Graphics 620 || Intel Corporation || 30.0.101.1692\n\n### Attach Zed log file\n\n_No response_\n\n### Relevant Zed settings\n\n<details><summary>settings.json</summary>\n\n```json\n{\n  \"edit_predictions\": {\n    \"provider\": \"open_ai_compatible_api\",\n    \"open_ai_compatible_api\": {\n      \"api_url\": \"https://openrouter.ai/api/v1/completions\",\n      \"model\": \"qwen/qwen3-coder-30b-a3b-instruct\",\n      \"prompt_format\": \"qwen\",\n      \"max_output_tokens\": 64,\n    },\n  },\n}\n```\n\n</details>\n\n\n### Relevant Keymap\n\n_No response_\n\n### (for AI issues) Model provider details\n\n_No response_\n\n### If you are using WSL on Windows, what flavor of Linux are you using?\n\nNone",
+  "state": "open",
+  "state_reason": null,
+  "created_at": "2026-04-24T12:06:32Z",
+  "closed_at": null,
+  "updated_at": "2026-04-24T12:06:32Z",
+  "user": {
+   "login": "user68",
+   "type": "User"
+  }
+ },
+ {
+  "number": 54802,
+  "id": 1054802,
+  "title": "Zoom/Pan not possible in SVG Preview (only other images)",
+  "body": "### Reproduction steps\n\nOpen the SVG Preview of an SVG and try zooming\n\n### Current vs. Expected behavior\n\nSame behavior as any other image.\n\n### Zed version and system specs\n\nZed: v0.233.9+stable.248.236e6ddf54e0763d0343f4d3e369d2ae00fe9670 (Zed) \nOS: macOS 26.4.1\nMemory: 32 GiB\nArchitecture: aarch64\n",
+  "state": "open",
+  "state_reason": null,
+  "created_at": "2026-04-24T16:02:36Z",
+  "closed_at": null,
+  "updated_at": "2026-04-24T16:02:36Z",
+  "user": {
+   "login": "user94",
+   "type": "User"
+  }
+ },
+ {
+  "number": 56545,
+  "id": 1056545,
+  "title": "`tasks.json` update not being picked up by gutter icons (tags)",
+  "body": "### Reproduction steps\n\n1. Add a tasks `tasks.json` that has a `tags` key (e.g., for overwriting the unit test runner).\n2. Check that the inline runnable indicators picked up the tasks (might need to reload the workspace/restart Zed).\n3. Change the tasks (e.g. alter it's label—my real use-case would be changing the set environment variables)\n4. Check the indicator again\n\n### Current vs. Expected behavior\n\nThe run icons should pick up changes to tasks.json right away without having to reload the workspace.\n\n### Zed version and system specs\n\nVersion: 1.1.7+stable.268.c17f25cd782edffab64b7c4167abfa44f865b125\nOS: Linux Mint (x86_64-unknown-linux-gnu)\n\n### Attach Zed log file\n\n_No response_\n\n### Relevant Zed settings\n\n\n\n\n### Relevant Keymap\n\n\n\n\n### (for AI issues) Model provider details\n\n_No response_\n\n### If you are using WSL on Windows, what flavor of Linux are you using?\n\nNone",
+  "state": "open",
+  "state_reason": null,
+  "created_at": "2026-05-12T15:11:38Z",
+  "closed_at": null,
+  "updated_at": "2026-05-12T15:11:38Z",
+  "user": {
+   "login": "user91",
+   "type": "User"
+  }
+ },
+ {
+  "number": 56710,
+  "id": 1056710,
+  "title": "Zed via flatpak fails to start (hangs) if launched inside a default toolbox container",
+  "body": "### Reproduction steps\n\n1. Install zed via flatpak\n2. Create a new toolbox container with `toolbox create repro`\n3. Enter the toolbox via `toolbox enter repro`\n4. Attempt to start zed via cli from inside the toolbox, via `zed`\n\n### Current vs. Expected behavior\n\nCurrent behavior: zed hangs\nExpected behavior: zed starts (or at least crashes).\n\nSomewhat interestingly, zed _does_ exit when launched with `zed --foreground`, resulting in the following error:\n```\n/var/home/xzero/.local/zed.app/libexec/zed-editor: error while loading shared libraries: libasound.so.2: cannot open shared object file: No such file or directory\n```\n.... which does tell me something I could try...\n\n### Zed version and system specs\n\nZed 1.2.3 ede077939fbe732d38afe7cf2576d3a19ef3ca57 (flatpak)\nFedora Silverblue 44\nPodman\n\n### Attach Zed log file\n\nNo logs are generated/output to file\n\n\n### Relevant Zed settings\n\nN/A\n\n### Relevant Keymap\n\n_No response_\n\n### (for AI issues) Model provider details\n\n_No response_\n\n### If you are using WSL on Windows, what flavor of Linux are you using?\n\nNone",
+  "state": "open",
+  "state_reason": null,
+  "created_at": "2026-05-14T03:52:28Z",
+  "closed_at": null,
+  "updated_at": "2026-05-14T03:52:28Z",
+  "user": {
+   "login": "user62",
+   "type": "User"
+  }
+ },
+ {
+  "number": 56711,
+  "id": 1056711,
+  "title": "Cursor blink doesn't reset when tabbing between Find and Replace fields",
+  "body": "### Reproduction steps\n\n1. Open file-level or project-level Find/Replace\n2. tab and shift-tab between the Find and Replace fields when the cursor disappears in its blink animation\n\n### Current vs. Expected behavior\n\nJumping to another field should immediately reset the cursor's blink animation.\n\nCurrently, the cursor will (usually) follow its normal blink animation, regardless of movement. However, there is some occasional jank that causes the cursor to appear for a split second before disappearing again.\n\n### Zed version and system specs\n\nZed: v1.2.3+stable.273.ede077939fbe732d38afe7cf2576d3a19ef3ca57 (Zed) \nOS: macOS 15.7.5\nMemory: 16 GiB\nArchitecture: x86_64",
+  "state": "open",
+  "state_reason": null,
+  "created_at": "2026-05-14T03:58:06Z",
+  "closed_at": null,
+  "updated_at": "2026-05-14T03:58:06Z",
+  "user": {
+   "login": "user63",
+   "type": "User"
+  }
+ },
+ {
+  "number": 56958,
+  "id": 1056958,
+  "title": "Opened file from old git commit turns into current file version after reloading Zed ",
+  "body": "### Reproduction steps\n\n1. Open a tracked file in a git repository\n2. Select Ctrl + Shift + P -> git: file history\n3. View a previous commit\n4. Click Open File for the file selected in Step 1\n5. Opened buffer will correctly show the file contents at that specific commit\n6. Restart Zed\n7. Buffer now contains the file contents for the current commit instead\n\n### Current vs. Expected behavior\n\nhttps://github.com/user-attachments/assets/52a4f3ae-5851-43b8-bda3-ce34ed88d51b\n\nExpected behaviour: After restarting, the open file should have been the older version\n\n### Zed version and system specs\n\nZed: v1.1.7+stable (Zed) \nOS: Linux Wayland nixos 25.11\nMemory: 31.3 GiB\nArchitecture: x86_64\nGPU: AMD Radeon RX 6800 XT (RADV NAVI21) || radv || Mesa 25.2.6\n\n### Attach Zed log file\n\n_No response_\n\n### Relevant Zed settings\n\n_No response_\n\n### Relevant Keymap\n\n_No response_\n\n### (for AI issues) Model provider details\n\n_No response_\n\n### If you are using WSL on Windows, what flavor of Linux are you using?\n\nNone",
+  "state": "open",
+  "state_reason": null,
+  "created_at": "2026-05-16T17:07:30Z",
+  "closed_at": null,
+  "updated_at": "2026-05-16T17:07:30Z",
+  "user": {
+   "login": "user19",
+   "type": "User"
+  }
+ },
+ {
+  "number": 57348,
+  "id": 1057348,
+  "title": "Keystroke Edit Context drop-down misleadingly short",
+  "body": "### Reproduction steps\n\n1. Open Keymap Edit\n2. Edit a keybinding\n3. Click Edit Context\n4. Type \"age\"\n\n### Current vs. Expected behavior\n\nThe drop-down suggests the visible matches are the only ones:\n1. It's very short (3 entries) for no apparent reason\n2. There's no scrollbar\n\n<img width=\"625\" height=\"628\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/a188c273-20b9-4c95-b0ed-cceef7a167da\" />\n\n### Zed version and system specs\n\n1.4.0 Dev @ a0aa3e842f9ca65d7679a2aced0b2214dcf765c4\n\n### Attach Zed log file\n\n<details><summary>Zed.log</summary>\n\n<!-- Paste your log inside the code block. -->\n```log\n\n```\n\n</details>\n\n\n### Relevant Zed settings\n\n<details><summary>settings.json</summary>\n\n<!-- Paste your settings inside the code block. -->\n```json\n\n```\n\n</details>\n\n\n### Relevant Keymap\n\n<details><summary>keymap.json</summary>\n\n<!-- Paste your keymap file inside the code block. -->\n```json\n\n```\n\n</details>\n\n\n### (for AI issues) Model provider details\n\n_No response_\n\n### If you are using WSL on Windows, what flavor of Linux are you using?\n\nNone",
+  "state": "open",
+  "state_reason": null,
+  "created_at": "2026-05-21T07:17:56Z",
+  "closed_at": null,
+  "updated_at": "2026-05-21T07:17:56Z",
+  "user": {
+   "login": "user21",
+   "type": "User"
+  }
+ },
+ {
+  "number": 57560,
+  "id": 1057560,
+  "title": "Broken (not invalidated) workspace layout after space freed (pane moved out)",
+  "body": "### Reproduction steps\n\n1. open a file\n1. open command pallet, type `pane: split and move right`, enter\n1. open command pallet, type `pane: split and move left`, enter\n1. __now right side is useless and uncontrollable__, as well as left\n\n### Current vs. Expected behavior\n\nCurrent behavior:\n\nAfter pane has been moved from right side to left, right side isn't invalidated and still exist as free useless space.\n\nExpected behavior:\n\nNew free space should be removed, utilized for (just moved) left pane. \n\nLayout should be reconstructed as it is after drag-n-drop panes.\n\n<!-- Uploading \"Screen Recording 2026-05-23 at 16.24.37.mov\"... —>\n\n### Zed version and system specs\n\nZed: v1.3.6+stable.288.4ce18741ad2ea007cb20a1dd96d2a170d224cc01 (Zed) \nOS: macOS 15.7.7\nMemory: 16 GiB\nArchitecture: aarch64\n\n",
+  "state": "open",
+  "state_reason": null,
+  "created_at": "2026-05-23T12:28:11Z",
+  "closed_at": null,
+  "updated_at": "2026-05-23T12:28:11Z",
+  "user": {
+   "login": "user39",
+   "type": "User"
+  }
+ }
+]

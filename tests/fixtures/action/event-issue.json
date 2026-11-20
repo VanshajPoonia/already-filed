@@ -1,0 +1,21 @@
+{
+ "action": "opened",
+ "issue": {
+  "number": 58197,
+  "id": 1058197,
+  "title": "Signature help popover overlaps the completions menu",
+  "body": "### Reproduction steps\n\n1. Start the zed.\n2. Opened any file\n3. Any Function typed\n4. adding params shows two boxes but overlapping each other\n\n### Current vs. Expected behavior\n\n<img width=\"670\" height=\"456\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/ea83e394-cda6-4a16-9417-677fa5b61f6b\" />\n\n### Zed version and system specs\n\nZed Preview 1.5.3 \nCommit: ddf89f77ef37fa2ae90aa8725dafc2566745fbb4\nVersion: 1.5.3+preview.296.ddf89f77ef37fa2ae90aa8725dafc2566745fbb4\n\nArch Linux (hyprland)\n\n\n### Attach Zed log file\n\n<details><summary>Zed.log</summary>\n\n<!-- Paste your log inside the code block. -->\n```log\n\n```\n\n</details>\n\n\n### Relevant Zed settings\n\n<details><summary>settings.json</summary>\n\n<!-- Paste your settings inside the code block. -->\n```json\n  \"auto_signature_help\": true,\n  \"show_signature_help_after_edits\": true,\n  \"show_completions_on_input\": true,\n```\n\n</details>\n\n\n### Relevant Keymap\n\n<details><summary>keymap.json</summary>\n\n<!-- Paste your keymap file inside the code block. -->\n```json\n\n```\n\n</details>\n\n\n### (for AI issues) Model provider details\n\n_No response_\n\n### If you are using WSL on Windows, what flavor of Linux are you using?\n\nNone",
+  "state": "open",
+  "state_reason": null,
+  "created_at": "2026-06-01T04:50:12Z",
+  "closed_at": null,
+  "updated_at": "2026-06-01T04:50:12Z",
+  "user": {
+   "login": "user94",
+   "type": "User"
+  }
+ },
+ "repository": {
+  "full_name": "zed-industries/zed"
+ }
+}

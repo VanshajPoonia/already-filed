@@ -1,0 +1,71 @@
+name: IssueTwin duplicate finder
+description: Leaves one quiet comment when a new issue or PR looks like an earlier one. EmbeddingGemma runs on the runner. Never closes anything.
+author: VanshajPoonia
+branding:
+  icon: copy
+  color: gray-dark
+
+inputs:
+  token:
+    description: Token used to read issues and PRs and to write the one comment. Needs issues and pull-requests write.
+    default: ${{ github.token }}
+  threshold:
+    description: How close an earlier issue has to score to be mentioned, between 0 and 1. Higher means fewer, surer comments. Leave empty for the benchmarked default.
+    default: ''
+  pr-threshold:
+    description: The same for pull requests. Leave empty for the benchmarked default.
+    default: ''
+  dry-run:
+    description: Set to "true" to only print what the comment would say.
+    default: 'false'
+
+outputs:
+  comment:
+    description: What happened to the comment, one of posted, edited, unchanged, none, would-post or would-edit.
+    value: ${{ steps.check.outputs.comment }}
+  matches:
+    description: The issue or PR numbers mentioned, comma separated.
+    value: ${{ steps.check.outputs.matches }}
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-node@v7
+      with:
+        node-version: 24
+
+    - id: keys
+      shell: bash
+      run: |
+        echo "lock=$(sha256sum "$GITHUB_ACTION_PATH/package-lock.json" | cut -c1-16)" >> "$GITHUB_OUTPUT"
+        echo "day=$(date -u +%Y-%m-%d)" >> "$GITHUB_OUTPUT"
+
+    # npm's download cache, the model (197 MB, fetched once) and the vectors of earlier
+    # issues (one copy a day, so a rerun only embeds what is new).
+    - uses: actions/cache@v6
+      with:
+        path: ~/.npm
+        key: issuetwin-npm-${{ runner.os }}-${{ steps.keys.outputs.lock }}
+    - uses: actions/cache@v6
+      with:
+        path: ~/.cache/issuetwin/models
+        key: issuetwin-model-embeddinggemma-300m-q4-${{ steps.keys.outputs.lock }}
+        restore-keys: issuetwin-model-embeddinggemma-300m-q4-
+    - uses: actions/cache@v6
+      with:
+        path: ~/.cache/issuetwin/vectors
+        key: issuetwin-vectors-${{ steps.keys.outputs.day }}
+        restore-keys: issuetwin-vectors-
+
+    - shell: bash
+      working-directory: ${{ github.action_path }}
+      run: npm ci --no-audit --no-fund --loglevel=error
+
+    - id: check
+      shell: bash
+      env:
+        ISSUETWIN_TOKEN: ${{ inputs.token }}
+        ISSUETWIN_THRESHOLD: ${{ inputs.threshold }}
+        ISSUETWIN_PR_THRESHOLD: ${{ inputs.pr-threshold }}
+        ISSUETWIN_DRY_RUN: ${{ inputs.dry-run }}
+      run: node "$GITHUB_ACTION_PATH/action/run.mjs"
