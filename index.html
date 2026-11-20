@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>IssueTwin: Duplicate GitHub Issue Finder</title>
-  <meta name="description" content="Finds the open GitHub issues that duplicate an earlier one, and the issue you are about to file twice. An open model reads every issue in your browser.">
+  <meta name="description" content="Finds the open GitHub issues and pull requests that duplicate an earlier one, and the issue you are about to file twice. An open model reads every issue in your browser.">
   <meta name="theme-color" content="#f4f1ea" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#121417" media="(prefers-color-scheme: dark)">
   <link rel="manifest" href="manifest.webmanifest">
@@ -18,21 +18,32 @@
       <p class="kicker">IssueTwin</p>
       <h1>“Duplicate of #…”, without remembering <em>thousands</em> of issues.</h1>
       <p class="lede">Point it at a GitHub repo. An open model running in this tab reads every open issue (and the ones closed this month) and lists the open ones that say the same thing as an earlier one, with the comment ready to paste. Maintainers close duplicates in a click; reporters check before they file.</p>
+      <p class="lede">It does the same for pull requests: which open PRs fix an issue another PR already fixes, and which repeat an earlier PR.</p>
       <p class="promise"><span aria-hidden="true">🦥</span> No server, no sign-up, no API key. GitHub sends the issues to your browser; the model never leaves it.</p>
     </header>
 
     <section class="card input" aria-label="Repository">
-      <div class="samples">
+      <div class="modes" role="radiogroup" aria-label="What to check">
+        <label><input type="radio" name="mode" value="issues" checked> Issues</label>
+        <label><input type="radio" name="mode" value="prs"> Pull requests</label>
+      </div>
+      <div class="samples" data-mode="issues">
         <span class="small">Try one:</span>
         <button class="chip" data-repo="ollama/ollama" data-snapshot>ollama/ollama <span class="small">(instant snapshot)</span></button>
         <button class="chip" data-repo="zed-industries/zed">zed-industries/zed</button>
         <button class="chip" data-repo="neovim/neovim">neovim/neovim</button>
       </div>
+      <div class="samples" data-mode="prs" hidden>
+        <span class="small">Try one:</span>
+        <button class="chip" data-repo="meshery/meshery" data-snapshot>meshery/meshery <span class="small">(instant snapshot)</span></button>
+        <button class="chip" data-repo="ollama/ollama">ollama/ollama</button>
+        <button class="chip" data-repo="godotengine/godot">godotengine/godot</button>
+      </div>
       <label class="repo"><span class="small">Repository</span>
         <input id="repo" autocomplete="off" spellcheck="false" placeholder="owner/name" value="ollama/ollama"></label>
       <details class="token">
         <summary class="small">Hit GitHub's hourly limit? Add a token</summary>
-        <p class="small">Without one, GitHub allows 60 requests an hour from your network: a repo with 2,500 open issues uses about 30. A <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">fine-grained token</a> with no permissions at all (public repos only) is enough. It stays in this tab and goes only to api.github.com.</p>
+        <p class="small">Without one, GitHub allows 60 requests an hour from your network: a repo with 2,500 open issues uses about 30. A <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">fine-grained token</a> with no permissions at all (public repos only) is enough. It stays in this tab and goes only to api.github.com. For pull requests it also adds the issues people linked from the sidebar, not only the ones named in the text.</p>
         <input id="token" type="password" autocomplete="off" placeholder="github_pat_…">
       </details>
       <div class="go">
@@ -75,6 +86,25 @@
         <textarea id="draft" spellcheck="true" placeholder="Title on the first line&#10;&#10;Then what happened, any error message, versions…"></textarea>
         <div class="go"><button id="check" class="secondary">Has this been filed?</button></div>
         <div id="draft-out" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <section id="pr-results" hidden aria-live="polite">
+      <div class="card">
+        <p class="kicker">Open PRs for an issue that already has one</p>
+        <h2><span id="fixing-count">0</span> issues with more than one PR</h2>
+        <p class="small">From the issues each PR says it fixes. The oldest PR is first, then the ones that came after it.</p>
+        <ol id="fixing" class="pairs"></ol>
+      </div>
+      <div class="card">
+        <p class="kicker">Open PRs that look like an earlier one</p>
+        <h2><span id="pr-likely-count">0</span> of <span id="pr-open-count">0</span> open PRs</h2>
+        <p class="small">Each one next to the earlier PRs it most resembles, by title and description, with the "fixes #" links taken out. It suggests; you decide.</p>
+        <ol id="pr-likely" class="pairs"></ol>
+        <details id="pr-maybe-wrap" class="maybe-wrap">
+          <summary><span id="pr-maybe-count">0</span> more that might be (less sure)</summary>
+          <ol id="pr-maybe" class="pairs"></ol>
+        </details>
       </div>
     </section>
 

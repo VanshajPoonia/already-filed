@@ -1,13 +1,14 @@
-import { fetchIssues, parseRepo, MAX_ISSUES } from './github.js';
+import { fetchIssues, fetchPulls, parseRepo, MAX_ISSUES, MAX_PRS } from './github.js';
 import { issueText, templateLines } from './text.js';
 import { Matcher, RECENT_DAYS } from './match.js';
-import { LIKELY, MAYBE } from './threshold.js';
+import { LIKELY, MAYBE, PR_LIKELY, PR_MAYBE } from './threshold.js';
+import { prText, prTemplate, sameIssue } from './prs.js';
 import { clusters, closeRequests, send } from './sweep.js';
 import * as model from './model.js';
 
 const $ = (s) => document.querySelector(s);
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
-const STATE = { open: 'open', completed: 'closed', not_planned: 'closed: not planned', duplicate: 'closed as duplicate', reopened: 'open', closed: 'closed' };
+const STATE = { open: 'open', completed: 'closed', not_planned: 'closed: not planned', duplicate: 'closed as duplicate', reopened: 'open', closed: 'closed', merged: 'merged' };
 
 $('#size').textContent = `${model.SIZE_MB} MB`;
 
@@ -20,9 +21,21 @@ const params = new URLSearchParams(location.search);
 if (params.get('repo')) $('#repo').value = params.get('repo');
 try { const t = sessionStorage.getItem('gh-token'); if (t) $('#token').value = t; } catch {}
 
+let mode = 'issues';
+function setMode(m) {
+  mode = m;
+  document.querySelector(`input[name=mode][value=${m}]`).checked = true;
+  document.querySelectorAll('.samples').forEach((el) => { el.hidden = el.dataset.mode !== m; });
+  $('#go').textContent = m === 'prs' ? 'Find duplicate PRs' : 'Find the duplicates';
+}
+document.querySelectorAll('input[name=mode]').forEach((r) => r.addEventListener('change', () => setMode(r.value)));
+setMode(params.get('mode') === 'prs' ? 'prs' : 'issues');
+
 document.querySelectorAll('[data-repo]').forEach((b) => b.addEventListener('click', () => {
   $('#repo').value = b.dataset.repo;
-  if (b.dataset.snapshot != null) openSnapshot(b.dataset.repo); else run();
+  if (b.dataset.snapshot == null) run();
+  else if (mode === 'prs') openPrSnapshot(b.dataset.repo);
+  else openSnapshot(b.dataset.repo);
 }));
 $('#go').addEventListener('click', run);
 $('#repo').addEventListener('keydown', (e) => { if (e.key === 'Enter') run(); });
@@ -38,28 +51,10 @@ async function run() {
   $('#go').disabled = true;
   bar.hidden = false; bar.value = 0;
   $('#results').hidden = true;
-  history.replaceState(null, '', `?repo=${repo}`);
+  $('#pr-results').hidden = true;
+  history.replaceState(null, '', `?repo=${repo}${mode === 'prs' ? '&mode=prs' : ''}`);
   try {
-    status(`Fetching ${repo}'s open issues, and those closed in the last ${RECENT_DAYS} days, from GitHub…`);
-    const { issues, capped } = await fetchIssues(repo, { token, onProgress: (n) => { bar.value = Math.min(0.15, (n / 3000) * 0.15); status(`Fetching issues from GitHub… ${n.toLocaleString()}`); } });
-    if (issues.length < 2) throw new Error(`${repo} has ${issues.length ? 'only one open issue' : 'no open issues'} to compare.`);
-
-    status('Loading the model (once; it is cached after this)…');
-    const embed = await model.load((p) => { bar.value = 0.15 + p * 0.25; status(`Downloading EmbeddingGemma… ${Math.round(p * 100)}%`); });
-
-    const template = templateLines(issues);
-    const texts = issues.map((x) => issueText(x, template));
-    const titles = issues.map((x) => x.title.trim());
-    const t0 = performance.now();
-    const total = texts.length * 1.2; // titles are short: about a fifth of the work
-    const body = await embed(texts, (n) => { bar.value = 0.4 + 0.6 * (n / total); status(`Reading every issue on this device… ${n.toLocaleString()} of ${texts.length.toLocaleString()}`); });
-    const title = await embed(titles, (n) => { bar.value = 0.4 + 0.6 * ((texts.length + n * 0.2) / total); status('Reading the titles…'); });
-    const secs = ((performance.now() - t0) / 1000).toFixed(0);
-    current = { repo, issues, matcher: new Matcher(body, title, texts), template, embed };
-    status('Comparing every open issue with the ones filed before it…');
-    await new Promise((r) => setTimeout(r, 30));
-    const found = render(current);
-    status(`Read ${issues.length.toLocaleString()} issues in ${secs} s on this device (${model.backend() === 'webgpu' ? 'GPU' : 'CPU'}). ${found}${capped ? ` (Stopped at ${MAX_ISSUES.toLocaleString()} issues.)` : ''}`);
+    if (mode === 'prs') await runPrs(repo, token, bar); else await runIssues(repo, token, bar);
   } catch (err) {
     console.error(err);
     status(err.message || String(err));
@@ -69,32 +64,93 @@ async function run() {
   }
 }
 
-// A repo read in advance by the same model (scripts/snapshot.mjs), so the demo opens instantly.
+/** Embeds texts and titles with progress, after fetching took the first 15% of the bar. */
+async function read(texts, titles, bar, noun) {
+  status('Loading the model (once; it is cached after this)…');
+  const embed = await model.load((p) => { bar.value = 0.15 + p * 0.25; status(`Downloading EmbeddingGemma… ${Math.round(p * 100)}%`); });
+  const t0 = performance.now();
+  const total = texts.length * 1.2; // titles are short: about a fifth of the work
+  const body = await embed(texts, (n) => { bar.value = 0.4 + 0.6 * (n / total); status(`Reading every ${noun} on this device… ${n.toLocaleString()} of ${texts.length.toLocaleString()}`); });
+  const title = await embed(titles, (n) => { bar.value = 0.4 + 0.6 * ((texts.length + n * 0.2) / total); status('Reading the titles…'); });
+  return { embed, body, title, secs: ((performance.now() - t0) / 1000).toFixed(0) };
+}
+
+const device = () => (model.backend() === 'webgpu' ? 'GPU' : 'CPU');
+
+async function runIssues(repo, token, bar) {
+  status(`Fetching ${repo}'s open issues, and those closed in the last ${RECENT_DAYS} days, from GitHub…`);
+  const { issues, capped } = await fetchIssues(repo, { token, onProgress: (n) => { bar.value = Math.min(0.15, (n / 3000) * 0.15); status(`Fetching issues from GitHub… ${n.toLocaleString()}`); } });
+  if (issues.length < 2) throw new Error(`${repo} has ${issues.length ? 'only one open issue' : 'no open issues'} to compare.`);
+  const template = templateLines(issues);
+  const texts = issues.map((x) => issueText(x, template));
+  const { embed, body, title, secs } = await read(texts, issues.map((x) => x.title.trim()), bar, 'issue');
+  current = { repo, issues, matcher: new Matcher(body, title, texts), template, embed };
+  status('Comparing every open issue with the ones filed before it…');
+  await new Promise((r) => setTimeout(r, 30));
+  const found = render(current);
+  status(`Read ${issues.length.toLocaleString()} issues in ${secs} s on this device (${device()}). ${found}${capped ? ` (Stopped at ${MAX_ISSUES.toLocaleString()} issues.)` : ''}`);
+}
+
+async function runPrs(repo, token, bar) {
+  status(`Fetching ${repo}'s open pull requests, and those closed in the last ${RECENT_DAYS} days, from GitHub…`);
+  const { prs: fetched, capped, linked } = await fetchPulls(repo, { token, onProgress: (n) => { bar.value = Math.min(0.15, (n / 1500) * 0.15); status(`Fetching pull requests from GitHub… ${n.toLocaleString()}`); } });
+  const prs = fetched.filter((p) => !p.bot);
+  if (prs.filter((p) => p.state === 'open').length < 1) throw new Error(`${repo} has no open pull requests from people to compare.`);
+  const template = prTemplate(prs);
+  const texts = prs.map((p) => prText(p, template));
+  const { body, title, secs } = await read(texts, prs.map((p) => p.title.trim()), bar, 'pull request');
+  status('Comparing every open PR with the ones filed before it…');
+  await new Promise((r) => setTimeout(r, 30));
+  const found = renderPrs({ repo, prs, matcher: new Matcher(body, title, texts) });
+  const from = linked === 'github' ? '' : ` Linked issues come from the PR text only${token ? ` (${linked})` : '. A token adds the ones linked from the sidebar'}.`;
+  status(`Read ${prs.length.toLocaleString()} pull requests in ${secs} s on this device (${device()}). ${found}${from}${capped ? ` (Stopped at ${MAX_PRS.toLocaleString()} PRs.)` : ''}`);
+}
+
+// Vectors read in advance by the same model (scripts/snapshot.mjs), as 8-bit numbers.
+async function loadSnapshot(name) {
+  const [meta, buf] = await Promise.all([
+    fetch(`data/snapshots/${name}.json`).then((r) => r.json()),
+    fetch(`data/snapshots/${name}.bin`).then((r) => r.arrayBuffer()),
+  ]);
+  const q = new Int8Array(buf);
+  const vec = (row) => {
+    const v = new Float32Array(meta.dims);
+    let n = 0;
+    for (let x = 0; x < meta.dims; x++) { v[x] = q[row * meta.dims + x] * meta.scale; n += v[x] * v[x]; }
+    n = Math.sqrt(n);
+    for (let x = 0; x < meta.dims; x++) v[x] /= n;
+    return v;
+  };
+  const count = meta.issues?.length ?? meta.prs.length;
+  const day = new Date(meta.taken).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+  return { meta, day, body: Array.from({ length: count }, (_, k) => vec(2 * k)), title: Array.from({ length: count }, (_, k) => vec(2 * k + 1)) };
+}
+
+// A repo read in advance, so the demo opens instantly.
 async function openSnapshot(repo) {
-  const key = repo.replace('/', '__');
   status(`Opening a snapshot of ${repo}…`);
+  $('#pr-results').hidden = true;
   try {
-    const [meta, buf] = await Promise.all([
-      fetch(`data/snapshots/${key}.json`).then((r) => r.json()),
-      fetch(`data/snapshots/${key}.bin`).then((r) => r.arrayBuffer()),
-    ]);
-    const q = new Int8Array(buf);
-    const vec = (row) => {
-      const v = new Float32Array(meta.dims);
-      let n = 0;
-      for (let x = 0; x < meta.dims; x++) { v[x] = q[row * meta.dims + x] * meta.scale; n += v[x] * v[x]; }
-      n = Math.sqrt(n);
-      for (let x = 0; x < meta.dims; x++) v[x] /= n;
-      return v;
-    };
-    const body = meta.issues.map((_, k) => vec(2 * k));
-    const title = meta.issues.map((_, k) => vec(2 * k + 1));
+    const { meta, day, body, title } = await loadSnapshot(repo.replace('/', '__'));
     current = { repo, issues: meta.issues, matcher: new Matcher(body, title, meta.texts), template: new Set(), embed: null };
     status(`Comparing every open issue of ${repo} with the ones filed before it…`);
     await new Promise((r) => setTimeout(r, 30));
     const found = render(current);
-    const day = new Date(meta.taken).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
     status(`A snapshot of ${repo} taken on ${day}: ${meta.issues.length.toLocaleString()} open and recently closed issues, read in advance by the same model. ${found} Press “Find the duplicates” to read today's issues live.`);
+  } catch (err) {
+    console.error(err);
+    status(`Could not open the snapshot (${err.message}).`);
+  }
+}
+
+async function openPrSnapshot(repo) {
+  status(`Opening a snapshot of ${repo}'s pull requests…`);
+  $('#results').hidden = true;
+  try {
+    const { meta, day, body, title } = await loadSnapshot(`${repo.replace('/', '__')}-prs`);
+    await new Promise((r) => setTimeout(r, 30));
+    const found = renderPrs({ repo, prs: meta.prs, matcher: new Matcher(body, title, meta.texts) });
+    status(`A snapshot of ${repo} taken on ${day}: ${meta.prs.length.toLocaleString()} open and recently closed pull requests, read in advance by the same model. ${found} Press “Find duplicate PRs” to read today's PRs live.`);
   } catch (err) {
     console.error(err);
     status(`Could not open the snapshot (${err.message}).`);
@@ -103,7 +159,7 @@ async function openSnapshot(repo) {
 
 // ---------- results -----------------------------------------------------------------------
 
-const url = (repo, n) => `https://github.com/${repo}/issues/${n}`;
+const url = (repo, n, kind = 'issues') => `https://github.com/${repo}/${kind}/${n}`;
 const ago = (iso) => {
   const d = (Date.now() - new Date(iso)) / 86400000;
   if (d < 1) return 'today';
@@ -113,11 +169,12 @@ const ago = (iso) => {
   return `${Math.round(d / 365)} years ago`;
 };
 
-function issueLine(repo, x, cls = '') {
-  return `<a class="issue ${cls}" href="${url(repo, x.n)}" target="_blank" rel="noopener">
+function issueLine(repo, x, cls = '', kind = 'issues') {
+  return `<a class="issue ${cls}" href="${url(repo, x.n, kind)}" target="_blank" rel="noopener">
     <span class="num">#${x.n}</span> <span class="title">${esc(x.title)}</span>
-    <span class="meta">${STATE[x.state] ?? x.state} · ${ago(x.created)}</span></a>`;
+    <span class="meta">${kind === 'pull' ? 'PR, ' : ''}${STATE[x.state] ?? x.state}${x.draft ? ', draft' : ''} · ${ago(x.created)}</span></a>`;
 }
+const prLine = (repo, p, cls = '') => issueLine(repo, p, cls, 'pull');
 
 function render({ repo, issues, matcher }) {
   // Each open issue against every issue filed before it, the same question the tests ask.
@@ -156,6 +213,62 @@ function render({ repo, issues, matcher }) {
   const best = new Map(rows.map((r) => [r.i, r.top[0]]));
   renderSweep(repo, issues, clusters(issues, (i) => best.get(i), LIKELY));
   return `${likely.length} of ${open.length.toLocaleString()} open issues look like an earlier one.`;
+}
+
+function renderPrs({ repo, prs, matcher }) {
+  const at = new Map(prs.map((p, i) => [p.n, i]));
+
+  // Issues with more than one PR: the first one that fixes it, then every open PR after it.
+  const byIssue = new Map();
+  for (const s of sameIssue(prs)) {
+    if (!byIssue.has(s.issue)) byIssue.set(s.issue, { first: s.by[0], later: [] });
+    byIssue.get(s.issue).later.push(s.pr);
+  }
+  const fixing = [...byIssue].sort((a, b) => b[1].later.length - a[1].later.length || b[0] - a[0]);
+  $('#fixing-count').textContent = fixing.length;
+  $('#fixing').innerHTML = fixing.map(([issue, { first, later }]) => {
+    const p = prs[at.get(first)];
+    return `
+    <li class="pair likely">
+      <p class="fix">Issue <a href="${url(repo, issue)}" target="_blank" rel="noopener">#${issue}</a> ${p.state === 'merged' ? 'was already fixed in' : 'is already being fixed in'} PR #${first}${p.state === 'merged' ? ', which is merged' : ''}.</p>
+      ${prLine(repo, p)}
+      <p class="looks">also fixing it</p>
+      <ol class="matches">${later.sort((a, b) => a - b).map((n) => `<li>${prLine(repo, prs[at.get(n)])}</li>`).join('')}</ol>
+      <div class="actions"><button class="copy" data-copy="Duplicate of #${first}">Copy “Duplicate of #${first}”</button></div>
+    </li>`;
+  }).join('') || '<li class="empty">No issue has more than one open PR fixing it.</li>';
+
+  // PRs whose text looks like an earlier PR's. Pairs already shown above are left out.
+  const shares = (a, b) => a.closes?.some((x) => b.closes?.includes(x));
+  const open = prs.map((p, i) => [p, i]).filter(([p]) => p.state === 'open');
+  const rows = [];
+  for (const [p, i] of open) {
+    const top = matcher.top(i, Array.from({ length: i }, (_, j) => j), 3).filter(([j]) => !shares(p, prs[j]));
+    if (top.length && top[0][1] >= PR_MAYBE) rows.push({ p, top });
+  }
+  rows.sort((a, b) => b.top[0][1] - a.top[0][1]);
+  const likely = rows.filter((r) => r.top[0][1] >= PR_LIKELY);
+  const maybe = rows.filter((r) => r.top[0][1] < PR_LIKELY);
+  const card = ({ p, top }) => `
+    <li class="pair ${top[0][1] >= PR_LIKELY ? 'likely' : 'maybe'}">
+      ${prLine(repo, p, 'new')}
+      <p class="looks">looks like</p>
+      <ol class="matches">${top.filter(([, s], k) => k === 0 || s >= PR_MAYBE).map(([j]) => `<li>${prLine(repo, prs[j])}</li>`).join('')}</ol>
+      <div class="actions">
+        <button class="copy" data-copy="Duplicate of #${prs[top[0][0]].n}">Copy “Duplicate of #${prs[top[0][0]].n}”</button>
+        <a class="small" href="${url(repo, p.n, 'pull')}" target="_blank" rel="noopener">Open PR #${p.n} on GitHub</a>
+      </div>
+    </li>`;
+  $('#pr-likely-count').textContent = likely.length;
+  $('#pr-maybe-count').textContent = maybe.length;
+  $('#pr-open-count').textContent = open.length.toLocaleString();
+  $('#pr-likely').innerHTML = likely.map(card).join('') || '<li class="empty">No open PR looks like an earlier one.</li>';
+  $('#pr-maybe').innerHTML = maybe.map(card).join('');
+  $('#pr-maybe-wrap').hidden = !maybe.length;
+  $('#pr-maybe-wrap').open = !likely.length; // PRs rarely pass the strict line, so show the rest
+  $('#results').hidden = true;
+  $('#pr-results').hidden = false;
+  return `${fixing.length} issues have more than one PR, and ${likely.length} of ${open.length.toLocaleString()} open PRs look like an earlier one.`;
 }
 
 document.addEventListener('click', async (e) => {
