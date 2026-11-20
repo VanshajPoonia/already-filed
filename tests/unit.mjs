@@ -1,6 +1,6 @@
 // Fast checks of everything that is not the model: cleaning issue text, finding a repo's
-// template, keyword search, ranking, how the test questions are built, and which issues a PR
-// says it fixes.
+// template, keyword search, ranking, how the test questions are built, PR links and the backlog
+// sweep's requests.
 import assert from 'node:assert/strict';
 import { issueText, templateLines } from '../src/text.js';
 import { BM25, tokens } from '../src/bm25.js';
@@ -9,9 +9,15 @@ import { parseRepo } from '../src/github.js';
 import { groups, questions } from '../scripts/data.mjs';
 import { score, rankOfRight } from '../scripts/measure.mjs';
 import { linkedIssues, dupLinks, sameIssue, prText, prTemplate, isBot } from '../src/prs.js';
+import { clusters, closeRequests, send } from '../src/sweep.js';
 
 let passed = 0;
-const t = (name, fn) => { fn(); passed++; };
+const pending = [];
+const t = (name, fn) => {
+  const r = fn();
+  if (r instanceof Promise) pending.push(r.then(() => passed++, (e) => { e.message = `${name}: ${e.message}`; throw e; }));
+  else passed++;
+};
 
 const TEMPLATE = '### What is the issue?\n\n### OS\n\n### GPU\n\n### Ollama version\n';
 const mk = (n, title, body = '', extra = {}) => ({ n, title, body, created: `2026-01-${String(n % 28 + 1).padStart(2, '0')}`, state: 'open', ...extra });
@@ -130,4 +136,40 @@ t('PR text: template and issue references taken out', () => {
   assert.equal(prText(prs[3], prTemplate(prs)), 'Fix 3\nchange 3 see and');
 });
 
+const issues = [
+  { n: 10, id: 1010, state: 'open' }, { n: 11, id: 1011, state: 'open' }, { n: 12, id: 1012, state: 'open' },
+  { n: 13, id: 1013, state: 'duplicate' }, { n: 14, id: 1014, state: 'open' }, { n: 15, id: 1015, state: 'completed' },
+];
+
+t('sweep: open issues linked to their best match form groups around the oldest', () => {
+  const best = (i) => ({ 1: [0, 0.95], 2: [1, 0.93], 4: [3, 0.99] })[i] ?? (i === 5 ? [0, 0.99] : undefined);
+  const ids = (g) => g.map((c) => [c.canonical, c.members.map((m) => m.i)]);
+  // #14 only looks like #13, itself closed as a duplicate, so it has nothing to be closed against.
+  assert.deepEqual(ids(clusters(issues, best, 0.9)), [[0, [1, 2]]]);
+  assert.deepEqual(ids(clusters(issues, best, 0.94)), [[0, [1]]]);
+});
+
+t('sweep: GitHub close-as-duplicate requests, with the original id', () => {
+  const [r] = closeRequests('o/r', [{ issue: issues[1], original: issues[0] }]);
+  assert.deepEqual(r, { issue: 11, original: 10, method: 'PATCH', path: '/repos/o/r/issues/11', body: { state: 'closed', state_reason: 'duplicate', duplicate_issue_id: 1010 } });
+  assert.equal(closeRequests('o/r', [{ issue: { n: 2 }, original: { n: 1 } }])[0].body.duplicate_issue_id, null);
+});
+
+t('sweep: sends one at a time, looks up missing ids once, stops when GitHub refuses the token', async () => {
+  const calls = [];
+  const fake = async (u, init = {}) => {
+    calls.push([init.method || 'GET', u.replace('https://api.github.com', ''), init.body && JSON.parse(init.body)]);
+    if (u.endsWith('/issues/1')) return { ok: true, json: async () => ({ id: 5001 }) };
+    if (u.endsWith('/issues/4')) return { ok: false, status: 401, json: async () => ({ message: 'Bad credentials' }) };
+    return { ok: true, json: async () => ({}) };
+  };
+  const reqs = closeRequests('o/r', [2, 3, 4, 5].map((n) => ({ issue: { n }, original: { n: 1 } })));
+  const out = await send(reqs, { token: 't', fetch: fake });
+  assert.deepEqual(out.map((r) => r.ok), [true, true, false]);
+  assert.equal(out[2].error, 'Bad credentials');
+  assert.deepEqual(calls.map(([m, p]) => `${m} ${p}`), ['GET /repos/o/r/issues/1', 'PATCH /repos/o/r/issues/2', 'PATCH /repos/o/r/issues/3', 'PATCH /repos/o/r/issues/4']);
+  assert.deepEqual(calls[1][2], { state: 'closed', state_reason: 'duplicate', duplicate_issue_id: 5001 });
+});
+
+await Promise.all(pending);
 console.log(`${passed}/${passed} unit checks pass`);

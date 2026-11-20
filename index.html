@@ -55,6 +55,20 @@
         </details>
       </div>
 
+      <div class="card" id="sweep">
+        <p class="kicker">Backlog sweep</p>
+        <h2><span id="sweep-count">0</span> groups of open duplicates</h2>
+        <p class="small">The likely duplicates above, grouped. Each group starts with the issue the others look like. Tick the ones to close as duplicates of it. Nothing changes on GitHub until you turn off the dry run and confirm.</p>
+        <ol id="clusters" class="clusters"></ol>
+        <div class="sweep-controls">
+          <label class="check"><input type="checkbox" id="dry" checked> Dry run: show what would be sent, send nothing</label>
+          <label class="repo" id="write-wrap" hidden><span class="small">A <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">fine-grained token</a> with Issues: Read and write on this repo. It is kept in this tab's memory only, never saved, and goes only to api.github.com.</span>
+            <input id="write-token" type="password" autocomplete="off" placeholder="github_pat_…"></label>
+          <div class="go"><button id="close" class="secondary" disabled>Close 0 ticked issues</button></div>
+        </div>
+        <div id="sweep-out" aria-live="polite"></div>
+      </div>
+
       <div class="card">
         <p class="kicker">About to file an issue?</p>
         <h2>Check <span id="draft-repo"></span> first</h2>

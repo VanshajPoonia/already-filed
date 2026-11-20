@@ -2,6 +2,7 @@ import { fetchIssues, parseRepo, MAX_ISSUES } from './github.js';
 import { issueText, templateLines } from './text.js';
 import { Matcher, RECENT_DAYS } from './match.js';
 import { LIKELY, MAYBE } from './threshold.js';
+import { clusters, closeRequests, send } from './sweep.js';
 import * as model from './model.js';
 
 const $ = (s) => document.querySelector(s);
@@ -11,6 +12,7 @@ const STATE = { open: 'open', completed: 'closed', not_planned: 'closed: not pla
 $('#size').textContent = `${model.SIZE_MB} MB`;
 
 let current = null; // { repo, issues, matcher, template, embed }
+let sweep = null; // { repo, issues }
 
 // ---------- input -------------------------------------------------------------------------
 
@@ -123,7 +125,7 @@ function render({ repo, issues, matcher }) {
   const rows = [];
   for (const [x, i] of open) {
     const top = matcher.top(i, Array.from({ length: i }, (_, j) => j), 3);
-    if (top.length && top[0][1] >= MAYBE) rows.push({ x, top });
+    if (top.length && top[0][1] >= MAYBE) rows.push({ x, i, top });
   }
   rows.sort((a, b) => b.top[0][1] - a.top[0][1]);
   const likely = rows.filter((r) => r.top[0][1] >= LIKELY);
@@ -151,6 +153,8 @@ function render({ repo, issues, matcher }) {
   $('#results').hidden = false;
   $('#draft-repo').textContent = repo;
   $('#draft-out').innerHTML = '';
+  const best = new Map(rows.map((r) => [r.i, r.top[0]]));
+  renderSweep(repo, issues, clusters(issues, (i) => best.get(i), LIKELY));
   return `${likely.length} of ${open.length.toLocaleString()} open issues look like an earlier one.`;
 }
 
@@ -158,6 +162,70 @@ document.addEventListener('click', async (e) => {
   const b = e.target.closest('[data-copy]');
   if (!b) return;
   try { await navigator.clipboard.writeText(b.dataset.copy); b.textContent = 'Copied. Paste it as a comment.'; } catch { b.textContent = b.dataset.copy; }
+});
+
+// ---------- backlog sweep -----------------------------------------------------------------
+
+function renderSweep(repo, issues, groups) {
+  sweep = { repo, issues };
+  $('#sweep-count').textContent = groups.length;
+  $('#clusters').innerHTML = groups.map((g) => {
+    const o = issues[g.canonical];
+    return `
+    <li class="cluster">
+      <p class="looks">the original</p>
+      ${issueLine(repo, o)}
+      <p class="looks">close as duplicates of #${o.n}</p>
+      <ul class="members">${g.members.map((m) => `
+        <li><input type="checkbox" data-close="${m.i}" data-original="${g.canonical}" aria-label="Close #${issues[m.i].n} as a duplicate of #${o.n}">
+          ${issueLine(repo, issues[m.i])}</li>`).join('')}
+      </ul>
+    </li>`;
+  }).join('') || '<li class="empty">No groups of likely duplicates to close.</li>';
+  $('#sweep-out').innerHTML = '';
+  updateSweep();
+}
+
+const ticked = () => [...document.querySelectorAll('[data-close]:checked:not(:disabled)')];
+
+function updateSweep() {
+  const n = ticked().length;
+  const dry = $('#dry').checked;
+  $('#write-wrap').hidden = dry;
+  $('#close').disabled = !n;
+  $('#close').textContent = dry ? `Show what would be sent for ${n} ticked issue${n === 1 ? '' : 's'}` : `Close ${n} ticked issue${n === 1 ? '' : 's'}`;
+}
+$('#clusters').addEventListener('change', updateSweep);
+$('#dry').addEventListener('change', updateSweep);
+
+const requestText = (r) => `${r.method} ${r.path}\n${JSON.stringify(r.body).replace('"duplicate_issue_id":null', `"duplicate_issue_id": id of #${r.original}, looked up when sent`)}`;
+
+$('#close').addEventListener('click', async () => {
+  const boxes = ticked();
+  const { repo, issues } = sweep;
+  const reqs = closeRequests(repo, boxes.map((c) => ({ issue: issues[+c.dataset.close], original: issues[+c.dataset.original] })));
+  const out = $('#sweep-out');
+  if ($('#dry').checked) {
+    out.innerHTML = `<p class="small">Dry run. Nothing was sent. These ${reqs.length} requests would go to api.github.com, one at a time, using GitHub's own close-as-duplicate:</p><pre class="requests">${esc(reqs.map(requestText).join('\n\n'))}</pre>`;
+    return;
+  }
+  const token = $('#write-token').value.trim();
+  if (!token) { out.innerHTML = '<p class="verdict maybe">Paste a token with Issues: Read and write first.</p>'; return; }
+  if (!confirm(`Close ${reqs.length} issue${reqs.length === 1 ? '' : 's'} on ${repo} as duplicates? This changes ${reqs.length === 1 ? 'it' : 'them'} on GitHub for everyone.`)) return;
+  $('#close').disabled = true;
+  out.innerHTML = '<ol class="sent"></ol>';
+  const results = await send(reqs, {
+    token,
+    onResult: (r) => {
+      out.querySelector('.sent').insertAdjacentHTML('beforeend', r.ok
+        ? `<li>Closed <a href="${url(repo, r.issue)}" target="_blank" rel="noopener">#${r.issue}</a> as a duplicate of #${r.original}.</li>`
+        : `<li class="failed">#${r.issue} was not closed: ${esc(r.error)}</li>`);
+      if (r.ok) boxes.find((c) => issues[+c.dataset.close].n === r.issue).disabled = true;
+    },
+  });
+  const done = results.filter((r) => r.ok).length;
+  out.insertAdjacentHTML('beforeend', `<p class="small">${done} of ${reqs.length} closed.${results.length < reqs.length ? ' Stopped early because GitHub refused the token.' : ''}</p>`);
+  updateSweep();
 });
 
 // ---------- "about to file an issue?" ------------------------------------------------------

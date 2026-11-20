@@ -1,10 +1,10 @@
 // Caches the app shell so it opens instantly and the model's runtime is not re-fetched.
 // (Issues come fresh from GitHub each time; the model files are cached by transformers.js.)
-const SHELL = 'af-shell-v1';
+const SHELL = 'af-shell-v2';
 const RUNTIME = 'af-runtime-v1';
 const FILES = [
   './', 'index.html', 'assets/styles.css', 'assets/icon.svg', 'manifest.webmanifest',
-  'src/app.js', 'src/bm25.js', 'src/embed.js', 'src/github.js', 'src/match.js', 'src/model.js', 'src/text.js', 'src/threshold.js',
+  'src/app.js', 'src/bm25.js', 'src/embed.js', 'src/github.js', 'src/match.js', 'src/model.js', 'src/prs.js', 'src/sweep.js', 'src/text.js', 'src/threshold.js',
 ];
 
 self.addEventListener('install', (e) => {
