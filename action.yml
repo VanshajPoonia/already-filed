@@ -1,5 +1,5 @@
 name: IssueTwin duplicate finder
-description: Leaves one quiet comment when a new issue or PR looks like an earlier one. EmbeddingGemma runs on the runner. Never closes anything.
+description: Leaves one quiet comment when a new issue or PR looks like an earlier one. The model runs on the runner. Never closes.
 author: VanshajPoonia
 branding:
   icon: copy
